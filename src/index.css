@@ -1,47 +1,32 @@
 @import "tailwindcss";
 
-/* Daseis - Theme Sombre */
+/* Daseis - Theme Sombre Haute Fidélité */
 @theme {
-  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Geist', 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', monospace;
 
-  /* Couleurs principales - Theme Sombre */
-  --color-primary: #3b82f6;      /* Bleu 600 */
-  --color-primary-hover: #2563eb;
-  --color-secondary: #10b981;    /* Vert emerald 500 */
-  --color-secondary-hover: #059669;
-  
-  /* Background colors */
-  --color-canvas: #0f172a;       /* slate-900 */
-  --color-panel: #1e293b;        /* slate-800 */
-  --color-raised: #334155;       /* slate-700 */
-  
-  /* Text colors */
-  --color-white: #ffffff;
-  --color-slate-50: #f8fafc;
-  --color-slate-100: #f1f5f9;
-  --color-slate-200: #e2e8f0;
-  --color-slate-300: #cbd5e1;
-  --color-slate-400: #94a3b8;
-  --color-slate-500: #64748b;
-  --color-slate-600: #475569;
-  --color-slate-700: #334155;
-  --color-slate-800: #1e293b;
-  --color-slate-900: #0f172a;
-  
-  /* Border colors */
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  
-  /* Accent colors */
-  --color-blue-500: #3b82f6;
-  --color-blue-600: #2563eb;
-  --color-emerald-400: #10b981;
-  --color-emerald-500: #10b981;
-  --color-emerald-600: #059669;
+  /* Custom Easing Curves - Emil Kowalski Standards */
+  --ease-out-custom: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-custom: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer-custom: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Background Palette (Deep Space Obsidian) */
+  --color-canvas: #080d1a;
+  --color-canvas-subtle: #0d1424;
+  --color-card: #111a2e;
+  --color-card-hover: #16223b;
+  --color-raised: #1c2b4a;
+
+  /* Brand Accents */
+  --color-brand-blue: #3b82f6;
+  --color-brand-blue-hover: #2563eb;
+  --color-brand-emerald: #10b981;
+  --color-brand-emerald-hover: #059669;
+
+  /* Subtle Borders */
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(255, 255, 255, 0.16);
+  --color-border-accent: rgba(59, 130, 246, 0.35);
 }
 
 @layer base {
@@ -52,100 +37,81 @@
   
   body {
     font-family: var(--font-sans);
-    color: var(--color-white);
-    background-color: var(--color-slate-900);
+    color: #f1f5f9;
+    background-color: var(--color-canvas);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-serif);
-    font-weight: 600;
-    color: var(--color-white);
-    letter-spacing: -0.01em;
+    font-family: var(--font-sans);
+    letter-spacing: -0.025em;
   }
   
   p {
-    color: var(--color-slate-300);
-    line-height: 1.6;
-  }
-  
-  strong {
-    color: var(--color-white);
-    font-weight: 600;
-  }
-  
-  a {
-    color: var(--color-blue-400);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    transition: color 0.2s ease;
-  }
-  
-  a:hover {
-    color: var(--color-blue-300);
+    color: #94a3b8;
+    line-height: 1.65;
   }
   
   :focus-visible {
-    outline: 2px solid var(--color-blue-500);
-    outline-offset: 2px;
+    outline: 2px solid #3b82f6;
+    outline-offset: 3px;
   }
-  
+
   ::selection {
-    background: rgba(59, 130, 246, 0.3);
-    color: var(--color-white);
+    background: rgba(59, 130, 246, 0.35);
+    color: #ffffff;
   }
 }
 
-/* Scrollbar styling - Theme Sombre */
+/* Emil Kowalski Button & Interactive Polish */
+.btn-pressable {
+  transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+              background-color 160ms ease,
+              border-color 160ms ease,
+              box-shadow 160ms ease,
+              opacity 160ms ease;
+}
+
+.btn-pressable:active {
+  transform: scale(0.97);
+}
+
+/* Subtle glow effects */
+.glow-blue {
+  box-shadow: 0 0 40px -10px rgba(59, 130, 246, 0.25);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 40px -10px rgba(16, 185, 129, 0.25);
+}
+
+/* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-slate-900);
+  background: #080d1a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
-  border-radius: 4px;
+  background: #1e293b;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #334155;
 }
 
-/* Reduced motion */
+/* Reduced motion accessibility */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation: none !important;
-    transition: none !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-}
-
-/* Print styles - Theme Sombre */
-@media print {
-  body {
-    color: #000;
-    background: #fff;
-  }
-  
-  a[href]::after {
-    content: " (" attr(href) ")";
-    font-size: 0.8em;
-    font-weight: normal;
-    color: #666;
-  }
-}
-
-/* Focus ring for accessibility */
-.focus-ring:focus-visible {
-  outline: 2px solid var(--color-blue-500);
-  outline-offset: 2px;
-}
-
-/* Smooth transitions */
-.transition-smooth {
-  transition: all 0.2s ease;
 }
