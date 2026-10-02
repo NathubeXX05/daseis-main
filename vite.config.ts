@@ -5,6 +5,7 @@ import { defineConfig, loadEnv } from 'vite';
 import { Resend } from 'resend';
 
 export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
   const resendApiKey = env.RESEND_API_KEY || process.env.RESEND_API_KEY || '';
   const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
