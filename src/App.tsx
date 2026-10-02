@@ -972,11 +972,15 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
 
     try {
       // Envoi de l'email via Resend vers daseis.foundation@gmail.com
-      await fetch('/api/contact', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, role }),
       });
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => null);
+        console.warn('Statut envoi notification email :', res.status, errJson);
+      }
     } catch (err) {
       console.warn('Notification envoyée (fallback mode) :', err);
     } finally {
