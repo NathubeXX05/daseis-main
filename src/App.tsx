@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowRight, 
   CheckCircle, 
@@ -17,6 +17,7 @@ import {
   Check
 } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'motion/react';
+import { LegalModal, LegalTab } from './components/LegalModal';
 
 // Types & Profiles
 type ActivityType = 'esthetic' | 'nails' | 'hair' | 'spa';
@@ -937,7 +938,13 @@ function FAQ() {
 }
 
 // 8. Contact & Request Form (Integrated with Resend API endpoint)
-function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
+function ContactForm({ 
+  prefilledActivity, 
+  onOpenLegal 
+}: { 
+  prefilledActivity?: string; 
+  onOpenLegal: (tab: LegalTab) => void;
+}) {
   const [role, setRole] = useState<'institut' | 'fournisseur'>('institut');
   const [formData, setFormData] = useState({
     name: '',
@@ -1195,27 +1202,67 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn-pressable w-full py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 text-white font-semibold text-sm shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer"
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                  <span>Envoi en cours via Resend...</span>
-                </>
-              ) : (
-                <>
-                  <span>Recevoir mes codes et catalogues remisés</span>
-                  <PaperPlaneTilt size={16} weight="bold" />
-                </>
-              )}
-            </button>
+            <div className="space-y-3 pt-2">
+              <div className="flex items-start gap-2.5 text-xs text-slate-400">
+                <input
+                  type="checkbox"
+                  id="rgpd-consent"
+                  required
+                  defaultChecked
+                  className="mt-0.5 rounded border-slate-700 bg-slate-900 text-blue-500 focus:ring-blue-500/30 focus:ring-offset-0 cursor-pointer"
+                />
+                <label htmlFor="rgpd-consent" className="cursor-pointer text-[11px] leading-relaxed">
+                  J'accepte les{' '}
+                  <button
+                    type="button"
+                    onClick={() => onOpenLegal('cgu')}
+                    className="text-blue-400 hover:text-blue-300 underline cursor-pointer"
+                  >
+                    Conditions Générales
+                  </button>{' '}
+                  et la{' '}
+                  <button
+                    type="button"
+                    onClick={() => onOpenLegal('rgpd')}
+                    className="text-blue-400 hover:text-blue-300 underline cursor-pointer"
+                  >
+                    Notice RGPD & Données
+                  </button>{' '}
+                  de Daseis. Mes coordonnées sont exclusivement utilisées pour la délivrance de mes remises et ne sont jamais revendues.
+                </label>
+              </div>
 
-            <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400 text-center">
-              <ShieldCheck size={14} className="text-emerald-400" />
-              <span>Vos données restent strictement confidentielles (RGPD). Aucun démarchage abusif.</span>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="btn-pressable w-full py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 text-white font-semibold text-sm shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                    <span>Envoi en cours via Resend...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Recevoir mes codes et catalogues remisés</span>
+                    <PaperPlaneTilt size={16} weight="bold" />
+                  </>
+                )}
+              </button>
+
+              <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400 text-center">
+                <ShieldCheck size={14} className="text-emerald-400 shrink-0" />
+                <span>
+                  Données protégées conformément au RGPD.{' '}
+                  <button
+                    type="button"
+                    onClick={() => onOpenLegal('rgpd')}
+                    className="text-blue-400 hover:text-blue-300 underline cursor-pointer ml-0.5"
+                  >
+                    Consulter la notice
+                  </button>
+                </span>
+              </div>
             </div>
           </form>
         )}
@@ -1225,7 +1272,7 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
 }
 
 // 9. Footer (Clean, responsive with support email)
-function Footer() {
+function Footer({ onOpenLegal }: { onOpenLegal: (tab: LegalTab) => void }) {
   return (
     <footer className="bg-[#050811] border-t border-white/[0.08] py-12 text-slate-400 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1275,10 +1322,28 @@ function Footer() {
           <div>
             © {new Date().getFullYear()} Daseis Technologies. Tous droits réservés. Service gratuit sans engagement.
           </div>
-          <div className="flex gap-4">
-            <a href="#contact" className="hover:text-white transition-colors">Mentions légales</a>
-            <a href="#contact" className="hover:text-white transition-colors">Politique RGPD</a>
-            <a href="#contact" className="hover:text-white transition-colors">Conditions Générales</a>
+          <div className="flex flex-wrap gap-4">
+            <button
+              type="button"
+              onClick={() => onOpenLegal('mentions')}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Mentions légales
+            </button>
+            <button
+              type="button"
+              onClick={() => onOpenLegal('rgpd')}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Politique RGPD
+            </button>
+            <button
+              type="button"
+              onClick={() => onOpenLegal('cgu')}
+              className="hover:text-white transition-colors cursor-pointer"
+            >
+              Conditions Générales (CGU)
+            </button>
           </div>
         </div>
       </div>
@@ -1289,6 +1354,33 @@ function Footer() {
 // Main Application Component
 export default function App() {
   const [selectedActivity, setSelectedActivity] = useState<string>('');
+  const [legalModalOpen, setLegalModalOpen] = useState(false);
+  const [legalInitialTab, setLegalInitialTab] = useState<LegalTab>('mentions');
+
+  const handleOpenLegal = (tab: LegalTab) => {
+    setLegalInitialTab(tab);
+    setLegalModalOpen(true);
+  };
+
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash === '#mentions-legales' || hash === '#mentions') {
+        setLegalInitialTab('mentions');
+        setLegalModalOpen(true);
+      } else if (hash === '#rgpd' || hash === '#confidentialite' || hash === '#donnees') {
+        setLegalInitialTab('rgpd');
+        setLegalModalOpen(true);
+      } else if (hash === '#cgu' || hash === '#conditions') {
+        setLegalInitialTab('cgu');
+        setLegalModalOpen(true);
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   const handleOpenContact = (role?: 'institut' | 'fournisseur') => {
     const el = document.getElementById('contact');
@@ -1311,9 +1403,14 @@ export default function App() {
         <AudienceSolutions onOpenContact={handleOpenContact} />
         <TransparencySection />
         <FAQ />
-        <ContactForm prefilledActivity={selectedActivity} />
+        <ContactForm prefilledActivity={selectedActivity} onOpenLegal={handleOpenLegal} />
       </main>
-      <Footer />
+      <Footer onOpenLegal={handleOpenLegal} />
+      <LegalModal
+        isOpen={legalModalOpen}
+        onClose={() => setLegalModalOpen(false)}
+        initialTab={legalInitialTab}
+      />
     </div>
   );
 }
