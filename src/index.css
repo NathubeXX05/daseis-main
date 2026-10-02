@@ -1,22 +1,23 @@
 @import "tailwindcss";
 
-/* Daseis - Design System */
+/* Daseis - Theme Sombre */
 @theme {
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
 
-  /* Couleurs principales */
-  --color-primary: #2563eb;      /* Bleu professionnel */
-  --color-primary-hover: #1d4ed8;
-  --color-secondary: #059669;    /* Vert économique */
-  --color-secondary-hover: #047857;
+  /* Couleurs principales - Theme Sombre */
+  --color-primary: #3b82f6;      /* Bleu 600 */
+  --color-primary-hover: #2563eb;
+  --color-secondary: #10b981;    /* Vert emerald 500 */
+  --color-secondary-hover: #059669;
   
-  /* Surface colors */
-  --color-canvas: #ffffff;
-  --color-panel: #f8fafc;
-  --color-raised: #ffffff;
+  /* Background colors */
+  --color-canvas: #0f172a;       /* slate-900 */
+  --color-panel: #1e293b;        /* slate-800 */
+  --color-raised: #334155;       /* slate-700 */
   
   /* Text colors */
+  --color-white: #ffffff;
   --color-slate-50: #f8fafc;
   --color-slate-100: #f1f5f9;
   --color-slate-200: #e2e8f0;
@@ -27,28 +28,32 @@
   --color-slate-700: #334155;
   --color-slate-800: #1e293b;
   --color-slate-900: #0f172a;
-  --color-white: #ffffff;
   
   /* Border colors */
-  --color-gray-200: #e2e8f0;
-  --color-gray-300: #cbd5e1;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
   
-  /* Status colors */
+  /* Accent colors */
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-emerald-400: #10b981;
   --color-emerald-500: #10b981;
-  --color-amber-500: #f59e0b;
-  --color-rose-500: #ef4444;
+  --color-emerald-600: #059669;
 }
 
 @layer base {
   html {
-    color-scheme: light;
+    color-scheme: dark;
     scroll-behavior: smooth;
   }
   
   body {
     font-family: var(--font-sans);
-    color: var(--color-slate-800);
-    background-color: var(--color-canvas);
+    color: var(--color-white);
+    background-color: var(--color-slate-900);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -56,59 +61,59 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
     font-weight: 600;
-    color: var(--color-slate-900);
+    color: var(--color-white);
     letter-spacing: -0.01em;
   }
   
   p {
-    color: var(--color-slate-700);
+    color: var(--color-slate-300);
     line-height: 1.6;
   }
   
   strong {
-    color: var(--color-slate-900);
+    color: var(--color-white);
     font-weight: 600;
   }
   
   a {
-    color: var(--color-primary);
+    color: var(--color-blue-400);
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: color 0.2s ease;
   }
   
   a:hover {
-    color: var(--color-primary-hover);
+    color: var(--color-blue-300);
   }
   
   :focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-blue-500);
     outline-offset: 2px;
   }
   
   ::selection {
-    background: rgba(37, 99, 235, 0.18);
-    color: var(--color-slate-900);
+    background: rgba(59, 130, 246, 0.3);
+    color: var(--color-white);
   }
 }
 
-/* Scrollbar styling */
+/* Scrollbar styling - Theme Sombre */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-canvas);
+  background: var(--color-slate-900);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #475569;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #64748b;
 }
 
 /* Reduced motion */
@@ -119,7 +124,7 @@
   }
 }
 
-/* Print styles */
+/* Print styles - Theme Sombre */
 @media print {
   body {
     color: #000;
@@ -130,76 +135,17 @@
     content: " (" attr(href) ")";
     font-size: 0.8em;
     font-weight: normal;
+    color: #666;
   }
 }
 
-/* Responsive base styles */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-/* Custom focus styles for accessibility */
+/* Focus ring for accessibility */
 .focus-ring:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-blue-500);
   outline-offset: 2px;
 }
 
-/* Smooth transitions for interactive elements */
+/* Smooth transitions */
 .transition-smooth {
   transition: all 0.2s ease;
-}
-
-/* Card styling */
-.card {
-  background: var(--color-panel);
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  border: 1px solid var(--color-gray-200);
-}
-
-/* Button base styles */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Input field styling */
-.input-field {
-  width: 100%;
-  padding: 0.875rem 1rem;
-  border: 1px solid var(--color-gray-300);
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.input-field:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  outline: none;
-}
-
-/* Link styling */
-.link {
-  color: var(--color-primary);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  transition: color 0.2s ease;
-}
-
-.link:hover {
-  color: var(--color-primary-hover);
 }
