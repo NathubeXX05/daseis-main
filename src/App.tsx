@@ -18,9 +18,13 @@ function Header() {
       <div className="max-w-6xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-              Daseis
-            </h1>
+            <a href="/" className="inline-block">
+              <img
+                src="/logo.svg"
+                alt="Daseis - Logo"
+                className="h-10 w-auto"
+              />
+            </a>
             <p className="text-sm text-slate-600 mt-1">
               Les mêmes produits pro, moins chers, sans frais pour votre institut
             </p>
