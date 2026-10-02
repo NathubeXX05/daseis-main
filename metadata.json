@@ -1,0 +1,6 @@
+{
+  "name": "Fides - Finance Catholique & Éthique",
+  "description": "PWA d'analyse de portefeuille d'investissement chrétienne et catholique : conformité à la Doctrine Sociale de l'Église, Laudato si', bioéthique, cours en direct et rendements.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Homonobus — Analyser son épargne selon la doctrine sociale de l'Église</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{--bg:#fff;--alt:#f4f5f7;--ink:#121b2b;--muted:#5b6676;--line:#d9dde3;--accent:#7b2332;--on-accent:#fff;--pos:#1f6b4f;--neg:#a4332f;--warn:#8a6413;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--alt:#151c27;--ink:#e8ebf0;--muted:#98a2b3;--line:#2a3342;--accent:#d98a97;--on-accent:#0f141c;--pos:#6fbf9b;--neg:#e08a84;--warn:#d4b062}}
+:root[data-theme="dark"]{--bg:#0f141c;--alt:#151c27;--ink:#e8ebf0;--muted:#98a2b3;--line:#2a3342;--accent:#d98a97;--on-accent:#0f141c;--pos:#6fbf9b;--neg:#e08a84;--warn:#d4b062}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,sans-serif;font-variant-numeric:tabular-nums}
+h1,h2{font-family:"Source Serif 4",Georgia,serif;font-weight:400;letter-spacing:-.01em;line-height:1.15;margin:0}
+h3{font-size:1rem;font-weight:600;margin:0 0 .4rem}
+p{margin:0}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+header{border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font:600 1.35rem "Source Serif 4",Georgia,serif;text-decoration:none}
+nav{display:flex;gap:28px;font-size:.9rem;color:var(--muted)}
+nav a{text-decoration:none}nav a:hover{color:var(--ink)}
+.hero{padding:88px 0 56px;max-width:760px}
+.hero h1{font-size:clamp(2.1rem,5vw,3.25rem)}
+.hero p{margin-top:24px;color:var(--muted);font-size:1.125rem;max-width:620px}
+.actions{margin-top:36px;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--accent);color:var(--on-accent);padding:13px 24px;border-radius:2px;text-decoration:none;font-weight:500;font-size:.95rem}
+.link{font-size:.95rem;text-underline-offset:4px}
+.sample{padding-bottom:88px}
+.cap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);padding:12px 0;border-top:1px solid var(--ink)}
+.cap strong{color:var(--ink);font-weight:600}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:760px}
+th{font-weight:500;color:var(--muted);text-align:right;padding:10px 12px;border-bottom:1px solid var(--line);font-size:.82rem}
+td{padding:14px 12px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child{text-align:left;padding-left:0}
+th:last-child,td:last-child{text-align:left}
+td small{display:block;color:var(--muted);font-size:.78rem}
+tfoot td{font-weight:600;border-bottom:0;border-top:1px solid var(--ink)}
+.v{display:inline-flex;align-items:center;gap:8px}
+.v::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.ok{color:var(--pos)}.mid{color:var(--warn)}.no{color:var(--neg)}
+.note{font-size:.82rem;color:var(--muted);margin-top:14px}
+section.band{background:var(--alt);padding:80px 0}
+section.plain{padding:80px 0}
+h2{font-size:clamp(1.6rem,3vw,2.15rem);max-width:640px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-top:44px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:44px}
+.grid4 p,.grid3 p{font-size:.93rem;color:var(--muted)}
+.grid4>div,.grid3>div{border-top:1px solid var(--ink);padding-top:16px}
+footer{border-top:1px solid var(--line);padding:40px 0 56px;font-size:.8rem;color:var(--muted)}
+footer p{max-width:760px;margin-top:8px}
+@media(max-width:860px){.grid4,.grid3{grid-template-columns:1fr 1fr;gap:32px}nav{display:none}}
+@media(max-width:560px){.grid4,.grid3{grid-template-columns:1fr}.hero{padding-top:56px}}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="logo" href="#">Homonobus</a>
+  <nav><a href="#analyse">Analyse</a><a href="#methode">Méthode</a><a href="#limites">Limites</a></nav>
+  <a class="link" href="#" style="font-size:.9rem">Se connecter</a>
+</div></header>
+
+<main>
+<div class="wrap">
+  <div class="hero">
+    <h1>Savoir ce que contient votre épargne, à la lumière de la doctrine sociale de l'Église.</h1>
+    <p>Homonobus note vos actions et vos fonds sur quatre critères et montre, ligne par ligne, ce qui pose question. La méthode est publique et chaque note peut être contestée.</p>
+    <div class="actions">
+      <a class="btn" href="#">Analyser mon portefeuille</a>
+      <a class="link" href="#methode">Lire la méthode</a>
+    </div>
+  </div>
+
+  <div class="sample" id="analyse">
+    <div class="cap"><span><strong>Portefeuille d'exemple</strong> — 4 lignes, valeur totale fictive</span><span>Notes sur 100</span></div>
+    <div class="scroll"><table>
+      <thead><tr><th>Ligne</th><th>Vie</th><th>Écologie</th><th>Travail</th><th>Gouvernance</th><th>Score</th><th>Dividende</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>Fonds Actions Europe A<small>FR0000000001</small></td><td>96</td><td>88</td><td>91</td><td>84</td><td><strong>90</strong></td><td>2,4 %</td><td><span class="v ok">Compatible</span></td></tr>
+        <tr><td>ETF Monde Large Cap<small>IE0000000002</small></td><td>71</td><td>62</td><td>68</td><td>75</td><td><strong>69</strong></td><td>1,6 %</td><td><span class="v mid">À examiner</span></td></tr>
+        <tr><td>Laboratoire Santé SA<small>FR0000000003</small></td><td>38</td><td>74</td><td>80</td><td>77</td><td><strong>67</strong></td><td>3,9 %</td><td><span class="v mid">À examiner</span></td></tr>
+        <tr><td>Énergie Fossile Global<small>US0000000004</small></td><td>80</td><td>22</td><td>55</td><td>60</td><td><strong>54</strong></td><td>5,8 %</td><td><span class="v no">Incompatible</span></td></tr>
+      </tbody>
+      <tfoot><tr><td>Portefeuille</td><td>71</td><td>62</td><td>74</td><td>74</td><td>70</td><td>3,4 %</td><td></td></tr></tfoot>
+    </table></div>
+    <p class="note">Données fictives, pour illustrer la lecture. Un fonds peut très bien performer en Bourse et être jugé incompatible : les deux informations sont séparées.</p>
+  </div>
+</div>
+
+<section class="band" id="methode"><div class="wrap">
+  <h2>Quatre critères, notés séparément</h2>
+  <div class="grid4">
+    <div><h3>Respect de la vie</h3><p>Exclusion des émetteurs liés à l'avortement, à la recherche sur l'embryon humain et à l'euthanasie.</p></div>
+    <div><h3>Écologie intégrale</h3><p>Inspirée de Laudato si' : part des énergies fossiles, intensité carbone, atteintes à l'eau et aux milieux.</p></div>
+    <div><h3>Justice du travail</h3><p>Salaires, sécurité, travail des enfants, relations avec les fournisseurs.</p></div>
+    <div><h3>Gouvernance</h3><p>Écarts de rémunération, transparence fiscale, présence dans des paradis fiscaux.</p></div>
+  </div>
+</div></section>
+
+<section class="plain" id="limites"><div class="wrap">
+  <h2>Ce que le score ne dit pas</h2>
+  <div class="grid3">
+    <div><h3>Ce n'est pas l'avis de l'Église</h3><p>Homonobus applique sa propre grille, inspirée de la doctrine sociale. Il n'est affilié ni à la Conférence des évêques ni au Saint-Siège.</p></div>
+    <div><h3>Ce n'est pas un conseil en investissement</h3><p>Nous n'indiquons ni quoi acheter ni quand. Tout placement comporte un risque de perte en capital.</p></div>
+    <div><h3>Les données peuvent être fausses</h3><p>Chaque note indique sa source et sa date. Si vous trouvez une erreur, signalez-la : elle sera corrigée et la correction sera datée.</p></div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <strong style="color:var(--ink)">Homonobus</strong>
+  <p>Outil d'analyse extra-financière à titre informatif. Les performances passées ne préjugent pas des performances futures.</p>
+</div></footer>
+</body>
+</html>
