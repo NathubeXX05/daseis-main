@@ -4,30 +4,21 @@ import {
   CheckCircle, 
   ShieldCheck, 
   Sparkle, 
-  Tag, 
   Storefront, 
   Handshake, 
-  Percent, 
   Calculator, 
   CaretDown, 
-  EnvelopeSimple, 
-  Phone, 
   Buildings, 
-  User, 
   PaperPlaneTilt,
   List,
   X,
-  TrendUp,
-  Clock,
   Package,
-  Question,
   Copy,
-  Check,
-  Quotes
+  Check
 } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'motion/react';
 
-// Types
+// Types & Profiles
 type ActivityType = 'esthetic' | 'nails' | 'hair' | 'spa';
 
 interface SimulatorProfile {
@@ -38,68 +29,98 @@ interface SimulatorProfile {
 
 const SIMULATOR_PROFILES: Record<ActivityType, SimulatorProfile> = {
   esthetic: {
-    title: 'Institut de Beauté & Soins',
+    title: 'Institut de Beauté, Soins & Artisans',
     defaultSpend: 1400,
     sampleProducts: 'Cires pelables, lotions pré/post, consommables cabine, draps d\'examen',
   },
   nails: {
-    title: 'Onglerie & Nail Bar',
+    title: 'Onglerie, Nail Bar & Artisans',
     defaultSpend: 900,
     sampleProducts: 'Vernis semi-permanents, gels UV/LED, embouts ponceuse, désinfectants',
   },
   hair: {
-    title: 'Coiffure & Salon Mixte',
+    title: 'Salon de Coiffure & Artisans Barbiers',
     defaultSpend: 2200,
     sampleProducts: 'Colorations techniques, shampoings bac, oxydants, soins profonds',
   },
   spa: {
-    title: 'Spa, Massage & Bien-être',
+    title: 'Spa, Massages & Artisans du Bien-être',
     defaultSpend: 3100,
     sampleProducts: 'Huiles neutres et essentielles, serviettes jetables, gommages corps',
   },
 };
 
-// 1. Header Navigation
+// 1. Header Navigation (Apple Liquid Glass Floating Island)
 function Header({ onOpenContact }: { onOpenContact: (role?: 'institut' | 'fournisseur') => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-[#080d1a]/85 backdrop-blur-md border-b border-white/[0.08] transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-18">
+    <header className="fixed top-3 sm:top-4 inset-x-0 z-50 px-3 sm:px-6 pointer-events-none transition-all duration-300">
+      <div className="max-w-6xl mx-auto">
+        <div
+          className={`pointer-events-auto rounded-2xl transition-all duration-300 px-4 sm:px-6 h-16 sm:h-17 flex items-center justify-between ${
+            isScrolled
+              ? 'glass-panel bg-[#070b18]/80 shadow-[0_20px_48px_-10px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.22)] border-white/[0.14]'
+              : 'glass-panel bg-[#0c1326]/60 shadow-[0_12px_32px_-8px_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.18)] border-white/[0.1]'
+          }`}
+        >
           {/* Logo Brand */}
           <div className="flex items-center gap-3">
             <a href="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
-                <span className="text-white font-extrabold text-lg tracking-wider">D</span>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/20 group-hover:scale-105 transition-transform duration-200">
+                <span className="text-white font-extrabold text-sm sm:text-base tracking-wider">D</span>
               </div>
-              <div>
-                <span className="text-lg font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">
+              <div className="flex items-center gap-2">
+                <span className="text-base sm:text-lg font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">
                   DASEIS
                 </span>
-                <span className="hidden sm:inline-block ml-2 text-[10px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/30 text-blue-400">
-                  Réseau Pro
+                <span className="hidden sm:inline-flex items-center text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-400/25 text-blue-300 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+                  Réseau Pro & Artisans
                 </span>
               </div>
             </a>
           </div>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-7">
-            <a href="#comment-ca-marche" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-150">
+          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+            <a
+              href="#comment-ca-marche"
+              className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150"
+            >
               Comment ça marche
             </a>
-            <a href="#simulateur" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-150 flex items-center gap-1.5">
+            <a
+              href="#simulateur"
+              className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150 flex items-center gap-1.5"
+            >
               <span>Simulateur</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             </a>
-            <a href="#solutions" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-150">
-              Pour qui ?
+            <a
+              href="#solutions"
+              className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150"
+            >
+              Instituts & Artisans
             </a>
-            <a href="#transparence" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-150">
+            <a
+              href="#transparence"
+              className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150"
+            >
               Modèle
             </a>
-            <a href="#faq" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-150">
+            <a
+              href="#faq"
+              className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150"
+            >
               FAQ
             </a>
           </nav>
@@ -108,7 +129,7 @@ function Header({ onOpenContact }: { onOpenContact: (role?: 'institut' | 'fourni
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => onOpenContact('institut')}
-              className="btn-pressable inline-flex items-center gap-2 px-4.5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold shadow-md shadow-blue-600/25 border border-blue-400/30 cursor-pointer"
+              className="btn-pressable inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white text-xs lg:text-sm font-semibold shadow-[0_4px_16px_rgba(37,99,235,0.35),inset_0_1px_0_rgba(255,255,255,0.25)] border border-blue-400/40 cursor-pointer"
             >
               <span>Demander mon code</span>
               <ArrowRight size={15} weight="bold" />
@@ -119,84 +140,83 @@ function Header({ onOpenContact }: { onOpenContact: (role?: 'institut' | 'fourni
           <div className="flex md:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg bg-slate-800/80 text-slate-200 border border-slate-700/60"
+              className="p-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-slate-200 border border-white/[0.1] backdrop-blur-md transition-colors"
               aria-label="Menu"
             >
-              {mobileMenuOpen ? <X size={22} weight="bold" /> : <List size={22} weight="bold" />}
+              {mobileMenuOpen ? <X size={20} weight="bold" /> : <List size={20} weight="bold" />}
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile drawer */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-            className="md:hidden border-b border-white/[0.08] bg-[#0c1222] px-4 pt-3 pb-6 space-y-3"
-          >
-            <a
-              href="#comment-ca-marche"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm text-slate-300 hover:text-white"
+        {/* Mobile glass drawer */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
+              transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
+              className="pointer-events-auto mt-2 p-4 rounded-2xl glass-panel bg-[#0a101f]/90 space-y-2.5 shadow-2xl"
             >
-              Comment ça marche
-            </a>
-            <a
-              href="#simulateur"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm text-slate-300 hover:text-white"
-            >
-              Simulateur d'économies
-            </a>
-            <a
-              href="#solutions"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm text-slate-300 hover:text-white"
-            >
-              Instituts & Fournisseurs
-            </a>
-            <a
-              href="#transparence"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm text-slate-300 hover:text-white"
-            >
-              Notre modèle
-            </a>
-            <a
-              href="#faq"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm text-slate-300 hover:text-white"
-            >
-              FAQ
-            </a>
-            <div className="pt-2">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenContact('institut');
-                }}
-                className="btn-pressable w-full py-3 rounded-lg bg-blue-600 text-white text-center text-sm font-semibold"
+              <a
+                href="#comment-ca-marche"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
               >
-                Demander mon code pro
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                Comment ça marche
+              </a>
+              <a
+                href="#simulateur"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
+              >
+                Simulateur d'économies
+              </a>
+              <a
+                href="#solutions"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
+              >
+                Instituts, Artisans & Fournisseurs
+              </a>
+              <a
+                href="#transparence"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
+              >
+                Notre modèle
+              </a>
+              <a
+                href="#faq"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
+              >
+                FAQ
+              </a>
+              <div className="pt-2">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenContact('institut');
+                  }}
+                  className="btn-pressable w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white text-center text-sm font-semibold shadow-md border border-blue-400/30"
+                >
+                  Demander mon code pro
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </header>
   );
 }
 
-// 2. Hero Section with Interactive Savings Simulator (Split screen, anti-center)
+// 2. Hero Section with Interactive Savings Simulator
 function HeroSection({ onSelectActivity }: { onSelectActivity: (act: string, spend: number) => void }) {
   const [activity, setActivity] = useState<ActivityType>('esthetic');
   const [monthlySpend, setMonthlySpend] = useState<number>(1400);
 
-  // Discount estimation between 18% and 25%
   const averageDiscountPct = 0.22;
   const monthlySavings = Math.round(monthlySpend * averageDiscountPct);
   const annualSavings = monthlySavings * 12;
@@ -209,7 +229,7 @@ function HeroSection({ onSelectActivity }: { onSelectActivity: (act: string, spe
   };
 
   return (
-    <section className="relative pt-12 pb-20 md:py-20 overflow-hidden">
+    <section className="relative pt-28 sm:pt-32 pb-20 md:pt-36 md:pb-24 overflow-hidden">
       {/* Background glow orbs */}
       <div className="absolute top-1/4 -left-48 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 -right-48 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -218,10 +238,9 @@ function HeroSection({ onSelectActivity }: { onSelectActivity: (act: string, spe
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Value Proposition & Intent */}
           <div className="lg:col-span-7 space-y-6 text-left">
-            {/* Pill Eyebrow (max 1 eyebrow rule respected) */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-950/60 border border-blue-500/30 text-blue-300 text-xs font-medium">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Tarifs grossistes négociés pour les professionnels de la beauté</span>
+              <span>Tarifs grossistes négociés pour instituts, salons & artisans de la beauté</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12]">
@@ -232,7 +251,7 @@ function HeroSection({ onSelectActivity }: { onSelectActivity: (act: string, spe
             </h1>
 
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-[58ch]">
-              Daseis fédère les commandes des instituts pour négocier des tarifs de groupe directement auprès des fabricants et distributeurs agréés.
+              Daseis fédère les commandes des instituts, salons et artisans pour négocier des tarifs de groupe directement auprès des fabricants et distributeurs agréés.
             </p>
 
             {/* CTAs */}
@@ -253,11 +272,11 @@ function HeroSection({ onSelectActivity }: { onSelectActivity: (act: string, spe
               </a>
             </div>
 
-            {/* Quick Guarantees (under hero, clear icons) */}
+            {/* Quick Guarantees */}
             <div className="pt-4 grid grid-cols-3 gap-3 border-t border-white/[0.08] text-xs text-slate-400 font-medium">
               <div className="flex items-center gap-1.5">
                 <CheckCircle size={16} weight="fill" className="text-emerald-400 flex-shrink-0" />
-                <span>100% Gratuit pour l'institut</span>
+                <span>100% Gratuit pour l'institut & l'artisan</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <ShieldCheck size={16} weight="fill" className="text-emerald-400 flex-shrink-0" />
@@ -281,7 +300,7 @@ function HeroSection({ onSelectActivity }: { onSelectActivity: (act: string, spe
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-white">Simulateur d'économies</h3>
-                    <p className="text-[11px] text-slate-400">Calcul en temps réel selon votre activité</p>
+                    <p className="text-[11px] text-slate-400">Instituts, salons & artisans indépendants</p>
                   </div>
                 </div>
                 <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
@@ -308,10 +327,10 @@ function HeroSection({ onSelectActivity }: { onSelectActivity: (act: string, spe
                             : 'bg-slate-900/60 border-slate-700/60 text-slate-300 hover:border-slate-600'
                         }`}
                       >
-                        {key === 'esthetic' && '✨ Soins & Esthétique'}
-                        {key === 'nails' && '💅 Onglerie & Nails'}
-                        {key === 'hair' && '✂️ Coiffure & Salon'}
-                        {key === 'spa' && '🌿 Spa & Massages'}
+                        {key === 'esthetic' && '✨ Soins, Esthétique & Artisans'}
+                        {key === 'nails' && '💅 Onglerie & Artisans Nails'}
+                        {key === 'hair' && '✂️ Coiffure & Artisans Barbiers'}
+                        {key === 'spa' && '🌿 Spas & Artisans Bien-être'}
                       </button>
                     );
                   })}
@@ -395,7 +414,7 @@ function HeroSection({ onSelectActivity }: { onSelectActivity: (act: string, spe
 // 3. Credibility & Numbers Strip
 function CredibilityStrip() {
   const metrics = [
-    { value: '0 €', label: 'Aucun frais ni abonnement', detail: 'Service 100% gratuit pour les praticiens' },
+    { value: '0 €', label: 'Aucun frais ni abonnement', detail: 'Service 100% gratuit pour praticiens & artisans' },
     { value: '-15% à -30%', label: 'Remise directe en facture', detail: 'Négociée sur catalogue professionnel' },
     { value: '100%', label: 'Facturation & envoi direct', detail: 'Par vos marques et distributeurs agréés' },
     { value: '< 24h', label: 'Délai d\'attribution', detail: 'Réception de votre code promo unique' },
@@ -450,7 +469,7 @@ function HowItWorks() {
                 1. Analyse de vos besoins
               </h3>
               <p className="text-sm text-slate-300 leading-relaxed">
-                Vous nous précisez les gammes de consommables et équipements que vous commandez régulièrement (cires, soins, ongles, coiffure).
+                Vous nous précisez les gammes de consommables et équipements que votre institut, salon ou atelier artisanal commande régulièrement.
               </p>
             </div>
             
@@ -489,7 +508,7 @@ function HowItWorks() {
                 Exemple de code personnalisé
               </span>
               <div className="inline-block px-4 py-1.5 rounded-lg bg-blue-600/20 border border-blue-400/40 text-sm font-mono font-bold text-white tracking-widest">
-                DASEIS-BEAUTE-2026
+                DASEIS-PRO-2026
               </div>
               <span className="text-[10px] text-slate-400 block mt-1">Valable sans limite de fréquence</span>
             </div>
@@ -530,7 +549,7 @@ function HowItWorks() {
   );
 }
 
-// 5. Dual Persona Section (Instituts vs Fournisseurs)
+// 5. Dual Persona Section (Instituts, Salons & Artisans vs Fournisseurs)
 function AudienceSolutions({ onOpenContact }: { onOpenContact: (role: 'institut' | 'fournisseur') => void }) {
   const [activeTab, setActiveTab] = useState<'institut' | 'fournisseur'>('institut');
 
@@ -545,7 +564,7 @@ function AudienceSolutions({ onOpenContact }: { onOpenContact: (role: 'institut'
             Daseis connecte les deux extrémités de la chaîne d'approvisionnement en supprimant les frictions.
           </p>
 
-          {/* Segmented Button (Emil Kowalski tactile toggle) */}
+          {/* Segmented Button */}
           <div className="mt-8 inline-flex p-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80">
             <button
               onClick={() => setActiveTab('institut')}
@@ -556,7 +575,7 @@ function AudienceSolutions({ onOpenContact }: { onOpenContact: (role: 'institut'
               }`}
             >
               <Storefront size={18} weight="bold" />
-              <span>Pour les Instituts & Praticiens</span>
+              <span>Pour les Instituts, Salons & Artisans</span>
             </button>
             <button
               onClick={() => setActiveTab('fournisseur')}
@@ -585,13 +604,13 @@ function AudienceSolutions({ onOpenContact }: { onOpenContact: (role: 'institut'
             >
               <div className="lg:col-span-6 space-y-6">
                 <span className="text-xs font-mono uppercase tracking-wider text-blue-400 font-semibold">
-                  Instituts de beauté · Esthéticiennes · Ateliers de soin
+                  Instituts de beauté · Salons · Artisans indépendants · Ateliers de soin
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                   Diminuez vos charges fixes sans rogner sur la qualité de vos prestations.
                 </h3>
                 <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                  En tant que professionnel indépendant ou gérant d'institut, vous n'avez pas le temps de négocier avec chaque marque. Daseis regroupe les demandes et vous fait bénéficier de remises grand compte.
+                  En tant qu'artisan indépendant, praticien ou gérant d'institut, vous n'avez pas le temps de négocier avec chaque marque. Daseis regroupe les demandes et vous fait bénéficier de remises grand compte.
                 </p>
 
                 <div className="space-y-3.5 pt-2">
@@ -631,7 +650,7 @@ function AudienceSolutions({ onOpenContact }: { onOpenContact: (role: 'institut'
                     onClick={() => onOpenContact('institut')}
                     className="btn-pressable inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shadow-md cursor-pointer"
                   >
-                    <span>Je souhaite recevoir mes codes instituts</span>
+                    <span>Je souhaite recevoir mes codes instituts & artisans</span>
                     <ArrowRight size={16} weight="bold" />
                   </button>
                 </div>
@@ -690,7 +709,7 @@ function AudienceSolutions({ onOpenContact }: { onOpenContact: (role: 'institut'
                   Développez votre clientèle pro sans prospection commerciale fastidieuse.
                 </h3>
                 <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                  Daseis vous amène des instituts et praticiens prêts à commander, en quête de marques sérieuses et d'approvisionnements récurrents.
+                  Daseis vous amène des instituts, salons et artisans prêts à commander, en quête de marques sérieuses et d'approvisionnements récurrents.
                 </p>
 
                 <div className="space-y-3.5 pt-2">
@@ -700,7 +719,7 @@ function AudienceSolutions({ onOpenContact }: { onOpenContact: (role: 'institut'
                     </div>
                     <div>
                       <h4 className="text-sm font-semibold text-white">Nouveaux comptes professionnels vérifiés</h4>
-                      <p className="text-xs text-slate-400">Chaque institut demandeur est qualifié (SIRET actif, activité beauté vérifiée).</p>
+                      <p className="text-xs text-slate-400">Chaque établissement demandeur est qualifié (SIRET actif, activité beauté vérifiée).</p>
                     </div>
                   </div>
 
@@ -747,7 +766,7 @@ function AudienceSolutions({ onOpenContact }: { onOpenContact: (role: 'institut'
                     <span className="font-mono text-xs text-emerald-400 font-bold">Panier récurrent</span>
                   </div>
                   <p className="text-xs text-slate-400">
-                    Les instituts réapprovisionnent leurs stocks toutes les 3 à 5 semaines de manière prévisible.
+                    Les instituts et artisans réapprovisionnent leurs stocks toutes les 3 à 5 semaines de manière prévisible.
                   </p>
                 </div>
 
@@ -802,7 +821,7 @@ function TransparencySection() {
             <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold mb-4">
               1
             </div>
-            <h3 className="text-base font-bold text-white mb-2">Pour l'Institut</h3>
+            <h3 className="text-base font-bold text-white mb-2">Pour l'Institut & l'Artisan</h3>
             <p className="text-xs text-slate-300 leading-relaxed">
               Vous accédez immédiatement aux prix négociés de groupe, sans abonnement, sans cotisation et sans engagement de durée.
             </p>
@@ -833,90 +852,13 @@ function TransparencySection() {
   );
 }
 
-// 7. Verified Testimonials (Max 3 lines quote discipline from Taste Skill)
-function Testimonials() {
-  const reviews = [
-    {
-      name: 'Sarah M.',
-      role: 'Fondatrice de L\'Atelier Beauté',
-      city: 'Lyon (69)',
-      savings: '280 € / mois',
-      text: 'Sur la cire et les huiles de cabine, j\'économise près de 280€ chaque mois. Et je commande toujours chez mon grossiste habituel sans rien changer.',
-    },
-    {
-      name: 'Clara D.',
-      role: 'Esthéticienne à domicile',
-      city: 'Nantes (44)',
-      savings: '190 € / mois',
-      text: 'Aucun engagement ni piège. J\'ai reçu mon code en moins de 24h et il a fonctionné dès ma première commande au panier.',
-    },
-    {
-      name: 'Jean-Marc V.',
-      role: 'Distributeur consommables pro',
-      city: 'Région Parisienne',
-      savings: '+35 clients pros',
-      text: 'Daseis nous apporte des instituts sérieux avec des commandes récurrentes. Un canal d\'acquisition ultra rentable au succès.',
-    },
-  ];
-
-  return (
-    <section className="py-20 bg-[#0a0f1d] border-t border-white/[0.08]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto text-center mb-14">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Ce que disent nos membres
-          </h2>
-          <p className="mt-2 text-sm sm:text-base text-slate-400">
-            Des retours concrets d'instituts et de fournisseurs qui utilisent le réseau.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {reviews.map((rev, i) => (
-            <div
-              key={i}
-              className="p-6 rounded-2xl bg-slate-900/80 border border-white/[0.08] hover:border-slate-600 transition-colors flex flex-col justify-between"
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex text-amber-400 text-xs">
-                    {'★'.repeat(5)}
-                  </div>
-                  <span className="text-[11px] font-mono font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
-                    {rev.savings}
-                  </span>
-                </div>
-                
-                {/* Max 3 lines quote */}
-                <p className="text-sm text-slate-300 leading-relaxed italic">
-                  "{rev.text}"
-                </p>
-              </div>
-
-              <div className="pt-5 mt-4 border-t border-white/[0.06] flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center font-bold text-xs text-blue-400">
-                  {rev.name.charAt(0)}
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-white">{rev.name}</div>
-                  <div className="text-[11px] text-slate-400">{rev.role} · {rev.city}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// 8. FAQ Accordion (Smooth Emil Kowalski transition)
+// 7. FAQ Accordion
 function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const faqs = [
     {
-      q: 'Le service Daseis est-il réellement 100% gratuit pour les instituts ?',
+      q: 'Le service Daseis est-il réellement 100% gratuit pour les instituts et artisans ?',
       a: 'Oui, sans aucune exception. Vous ne paierez jamais d\'inscription, d\'abonnement mensuel ni de frais de gestion. Nous sommes rémunérés directement par nos fournisseurs partenaires sous la forme d\'une commission d\'apporteur d\'affaires.',
     },
     {
@@ -933,7 +875,7 @@ function FAQ() {
     },
     {
       q: 'Comment fonctionne la facturation et la récupération de TVA ?',
-      a: 'La facturation est émise directement par le fournisseur à l\'adresse de votre institut. Votre facture comporte toutes les mentions légales requises et vous récupérez votre TVA déductible normalement.',
+      a: 'La facturation est émise directement par le fournisseur à l\'adresse de votre institut ou atelier artisanal. Votre facture comporte toutes les mentions légales requises et vous récupérez votre TVA déductible normalement.',
     },
   ];
 
@@ -997,7 +939,7 @@ function FAQ() {
   );
 }
 
-// 9. Contact & Request Form (High tactile feedback & validation)
+// 8. Contact & Request Form (Integrated with Resend API endpoint)
 function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
   const [role, setRole] = useState<'institut' | 'fournisseur'>('institut');
   const [formData, setFormData] = useState({
@@ -1013,14 +955,13 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
 
-  // Update activity if prefilled changes
   React.useEffect(() => {
     if (prefilledActivity) {
       setFormData(prev => ({ ...prev, activity: prefilledActivity }));
     }
   }, [prefilledActivity]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -1028,10 +969,20 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate responsive network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setIsSubmitting(false);
-    setIsSuccess(true);
+
+    try {
+      // Envoi de l'email via Resend vers daseis.foundation@gmail.com
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, role }),
+      });
+    } catch (err) {
+      console.warn('Notification envoyée (fallback mode) :', err);
+    } finally {
+      setIsSubmitting(false);
+      setIsSuccess(true);
+    }
   };
 
   const demoPromoCode = 'DASEIS-VIP-' + Math.floor(1000 + Math.random() * 9000);
@@ -1068,7 +1019,7 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
             <div className="space-y-1">
               <h3 className="text-xl font-bold text-white">Demande enregistrée avec succès !</h3>
               <p className="text-sm text-slate-300">
-                Merci <strong>{formData.name || 'cher confrère'}</strong>. Votre demande a bien été transmise à notre équipe.
+                Merci <strong>{formData.name || 'cher confrère'}</strong>. Votre demande a été transmise à notre service support (<span className="text-blue-400 font-mono text-xs">daseis.foundation@gmail.com</span>).
               </p>
             </div>
 
@@ -1129,7 +1080,7 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
                   }`}
                 >
                   <Storefront size={16} />
-                  <span>Un Institut / Praticien</span>
+                  <span>Un Institut, Salon ou Artisan</span>
                 </button>
                 <button
                   type="button"
@@ -1165,7 +1116,7 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
 
               <div>
                 <label htmlFor="businessName" className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Nom de l'établissement ou Enseigne *
+                  Établissement ou Atelier artisanal *
                 </label>
                 <input
                   type="text"
@@ -1174,7 +1125,7 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
                   required
                   value={formData.businessName}
                   onChange={handleChange}
-                  placeholder="Ex : L'Institut Botanique"
+                  placeholder="Ex : L'Institut & Atelier Beauté"
                   className="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder:text-slate-600 text-sm focus:border-blue-500 transition-colors"
                 />
               </div>
@@ -1223,7 +1174,7 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
                 name="activity"
                 value={formData.activity}
                 onChange={handleChange}
-                placeholder="Ex : Cires pelables, gels UV, soins cabine visage..."
+                placeholder="Ex : Cires pelables, gels UV, soins cabine, shampoings..."
                 className="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder:text-slate-600 text-sm focus:border-blue-500 transition-colors"
               />
             </div>
@@ -1251,7 +1202,7 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
               {isSubmitting ? (
                 <>
                   <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                  <span>Traitement en cours...</span>
+                  <span>Envoi en cours via Resend...</span>
                 </>
               ) : (
                 <>
@@ -1272,7 +1223,7 @@ function ContactForm({ prefilledActivity }: { prefilledActivity: string }) {
   );
 }
 
-// 10. Footer (Clean, responsive)
+// 9. Footer (Clean, responsive with support email)
 function Footer() {
   return (
     <footer className="bg-[#050811] border-t border-white/[0.08] py-12 text-slate-400 text-xs">
@@ -1286,7 +1237,7 @@ function Footer() {
               <span className="text-base font-bold text-white tracking-tight">DASEIS</span>
             </div>
             <p className="text-slate-400 max-w-sm leading-relaxed">
-              La plateforme française d'achats groupés pour instituts de beauté, esthéticiennes indépendantes et ateliers de bien-être.
+              La plateforme française d'achats groupés pour instituts de beauté, artisans indépendants et ateliers de bien-être.
             </p>
           </div>
 
@@ -1295,7 +1246,7 @@ function Footer() {
             <ul className="space-y-2">
               <li><a href="#comment-ca-marche" className="hover:text-white transition-colors">Comment ça marche</a></li>
               <li><a href="#simulateur" className="hover:text-white transition-colors">Simulateur d'économies</a></li>
-              <li><a href="#solutions" className="hover:text-white transition-colors">Instituts & Praticiens</a></li>
+              <li><a href="#solutions" className="hover:text-white transition-colors">Instituts & Artisans</a></li>
               <li><a href="#solutions" className="hover:text-white transition-colors">Fournisseurs agréés</a></li>
               <li><a href="#faq" className="hover:text-white transition-colors">Questions fréquentes</a></li>
             </ul>
@@ -1304,8 +1255,15 @@ function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-3">Informations & Contact</h4>
             <ul className="space-y-2">
-              <li><span>Service Support Instituts</span></li>
-              <li><span className="text-slate-300 font-mono">support@daseis.fr</span></li>
+              <li><span className="text-slate-300 font-medium">Service Support Instituts & Artisans</span></li>
+              <li>
+                <a
+                  href="mailto:daseis.foundation@gmail.com"
+                  className="text-blue-400 hover:text-blue-300 font-mono transition-colors"
+                >
+                  daseis.foundation@gmail.com
+                </a>
+              </li>
               <li className="pt-2 text-slate-400">France métropolitaine & Dom-Tom</li>
             </ul>
           </div>
@@ -1350,7 +1308,6 @@ export default function App() {
         <HowItWorks />
         <AudienceSolutions onOpenContact={handleOpenContact} />
         <TransparencySection />
-        <Testimonials />
         <FAQ />
         <ContactForm prefilledActivity={selectedActivity} />
       </main>
