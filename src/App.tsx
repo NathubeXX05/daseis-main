@@ -75,18 +75,15 @@ function Header({ onOpenContact }: { onOpenContact: (role?: 'institut' | 'fourni
         >
           {/* Logo Brand */}
           <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/20 group-hover:scale-105 transition-transform duration-200">
-                <span className="text-white font-extrabold text-sm sm:text-base tracking-wider">D</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-base sm:text-lg font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">
-                  DASEIS
-                </span>
-                <span className="hidden sm:inline-flex items-center text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-400/25 text-blue-300 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
-                  Réseau Pro & Artisans
-                </span>
-              </div>
+            <a href="/" className="flex items-center gap-3 group">
+              <img
+                src="/logo-wordmark.png"
+                alt="DASEIS"
+                className="h-6 sm:h-7 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.03]"
+              />
+              <span className="hidden sm:inline-flex items-center text-[10px] font-mono uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-400/25 text-blue-300 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+                Réseau Pro & Artisans
+              </span>
             </a>
           </div>
 
@@ -1234,11 +1231,12 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-white/[0.06]">
           <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
-                D
-              </div>
-              <span className="text-base font-bold text-white tracking-tight">DASEIS</span>
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo-wordmark.png"
+                alt="DASEIS"
+                className="h-6 sm:h-7 w-auto object-contain"
+              />
             </div>
             <p className="text-slate-400 max-w-sm leading-relaxed">
               La plateforme française d'achats groupés pour instituts de beauté, artisans indépendants et ateliers de bien-être.
