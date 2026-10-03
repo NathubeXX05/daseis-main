@@ -1,437 +1,209 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  ArrowRight, 
-  CheckCircle, 
-  ShieldCheck, 
-  Sparkle, 
-  Storefront, 
-  Handshake, 
-  Calculator, 
-  CaretDown, 
-  Buildings, 
-  PaperPlaneTilt,
-  List,
-  X,
-  Package,
-  Copy,
-  Check
-} from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'motion/react';
 import { LegalModal, LegalTab } from './components/LegalModal';
 
-// Types & Profiles
+// ─── Types ────────────────────────────────────────────────────────────────────
 type ActivityType = 'esthetic' | 'nails' | 'hair' | 'spa';
 
 interface SimulatorProfile {
   title: string;
   defaultSpend: number;
-  sampleProducts: string;
+  label: string;
 }
 
 const SIMULATOR_PROFILES: Record<ActivityType, SimulatorProfile> = {
   esthetic: {
-    title: 'Institut de Beauté, Soins & Artisans',
+    title: 'Institut de Beauté & Soins',
     defaultSpend: 1400,
-    sampleProducts: 'Cires pelables, lotions pré/post, consommables cabine, draps d\'examen',
+    label: 'Soins & Esthétique',
   },
   nails: {
-    title: 'Onglerie, Nail Bar & Artisans',
+    title: 'Onglerie & Nail Bar',
     defaultSpend: 900,
-    sampleProducts: 'Vernis semi-permanents, gels UV/LED, embouts ponceuse, désinfectants',
+    label: 'Onglerie',
   },
   hair: {
-    title: 'Salon de Coiffure & Artisans Barbiers',
+    title: 'Salon de Coiffure & Barbier',
     defaultSpend: 2200,
-    sampleProducts: 'Colorations techniques, shampoings bac, oxydants, soins profonds',
+    label: 'Coiffure & Barbier',
   },
   spa: {
-    title: 'Spa, Massages & Artisans du Bien-être',
+    title: 'Spa & Bien-être',
     defaultSpend: 3100,
-    sampleProducts: 'Huiles neutres et essentielles, serviettes jetables, gommages corps',
+    label: 'Spa & Bien-être',
   },
 };
 
-// 1. Header Navigation (Apple Liquid Glass Floating Island)
-function Header({ onOpenContact }: { onOpenContact: (role?: 'institut' | 'fournisseur') => void }) {
+// ─── 1. Navigation ─────────────────────────────────────────────────────────────
+function Header({ onOpenContact }: { onOpenContact: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   React.useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
-    <header className="fixed top-3 sm:top-4 inset-x-0 z-50 px-3 sm:px-6 pointer-events-none transition-all duration-300">
-      <div className="max-w-6xl mx-auto">
-        <div
-          className={`pointer-events-auto rounded-2xl transition-all duration-300 px-4 sm:px-6 h-16 sm:h-17 flex items-center justify-between ${
-            isScrolled
-              ? 'glass-panel bg-[#070b18]/80 shadow-[0_20px_48px_-10px_rgba(0,0,0,0.7),inset_0_1px_0_0_rgba(255,255,255,0.22)] border-white/[0.14]'
-              : 'glass-panel bg-[#0c1326]/60 shadow-[0_12px_32px_-8px_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.18)] border-white/[0.1]'
-          }`}
-        >
-          {/* Logo Brand */}
-          <div className="flex items-center gap-3">
-            <a href="/" className="flex items-center gap-3 group">
-              <img
-                src="/logo-wordmark.png"
-                alt="DASEIS"
-                className="h-6 sm:h-7 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.03]"
-              />
-              <span className="hidden sm:inline-flex items-center text-[10px] font-mono uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-400/25 text-blue-300 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
-                Réseau Pro & Artisans
-              </span>
-            </a>
-          </div>
+    <header
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? 'bg-white border-b border-neutral-200 shadow-sm'
+          : 'bg-white/90 backdrop-blur-md'
+      }`}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="h-16 flex items-center justify-between">
+          {/* Logo */}
+          <a href="/" className="flex items-center">
+            <img
+              src="/logo-wordmark-black.png"
+              alt="DASEIS"
+              className="h-6 sm:h-7 w-auto object-contain"
+            />
+          </a>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
-            <a
-              href="#comment-ca-marche"
-              className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150"
-            >
+          <nav className="hidden md:flex items-center gap-6">
+            <a href="#comment-ca-marche" className="text-sm text-neutral-600 hover:text-black transition-colors">
               Comment ça marche
             </a>
-            <a
-              href="#simulateur"
-              className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150 flex items-center gap-1.5"
-            >
-              <span>Simulateur</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            </a>
-            <a
-              href="#solutions"
-              className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150"
-            >
+            <a href="#solutions" className="text-sm text-neutral-600 hover:text-black transition-colors">
               Instituts & Artisans
             </a>
-            <a
-              href="#transparence"
-              className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150"
-            >
-              Modèle
+            <a href="#transparence" className="text-sm text-neutral-600 hover:text-black transition-colors">
+              Notre modèle
             </a>
-            <a
-              href="#faq"
-              className="px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150"
-            >
+            <a href="#faq" className="text-sm text-neutral-600 hover:text-black transition-colors">
               FAQ
             </a>
           </nav>
 
-          {/* Action Button */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* CTA Desktop */}
+          <div className="hidden md:block">
             <button
-              onClick={() => onOpenContact('institut')}
-              className="btn-pressable inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white text-xs lg:text-sm font-semibold shadow-[0_4px_16px_rgba(37,99,235,0.35),inset_0_1px_0_rgba(255,255,255,0.25)] border border-blue-400/40 cursor-pointer"
+              onClick={onOpenContact}
+              className="btn-pressable px-5 py-2.5 bg-black text-white text-sm font-medium rounded-none hover:bg-neutral-800 transition-colors cursor-pointer"
             >
-              <span>Demander mon code</span>
-              <ArrowRight size={15} weight="bold" />
+              Obtenir mon code
             </button>
           </div>
 
-          {/* Mobile menu trigger */}
-          <div className="flex md:hidden">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-slate-200 border border-white/[0.1] backdrop-blur-md transition-colors"
-              aria-label="Menu"
-            >
-              {mobileMenuOpen ? <X size={20} weight="bold" /> : <List size={20} weight="bold" />}
-            </button>
-          </div>
+          {/* Mobile burger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 text-black"
+            aria-label="Menu"
+          >
+            <span className="block w-5 h-px bg-black mb-1.5" />
+            <span className="block w-5 h-px bg-black mb-1.5" />
+            <span className="block w-5 h-px bg-black" />
+          </button>
         </div>
-
-        {/* Mobile glass drawer */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -8, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.98 }}
-              transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
-              className="pointer-events-auto mt-2 p-4 rounded-2xl glass-panel bg-[#0a101f]/90 space-y-2.5 shadow-2xl"
-            >
-              <a
-                href="#comment-ca-marche"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
-              >
-                Comment ça marche
-              </a>
-              <a
-                href="#simulateur"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
-              >
-                Simulateur d'économies
-              </a>
-              <a
-                href="#solutions"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
-              >
-                Instituts, Artisans & Fournisseurs
-              </a>
-              <a
-                href="#transparence"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
-              >
-                Notre modèle
-              </a>
-              <a
-                href="#faq"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors"
-              >
-                FAQ
-              </a>
-              <div className="pt-2">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenContact('institut');
-                  }}
-                  className="btn-pressable w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white text-center text-sm font-semibold shadow-md border border-blue-400/30"
-                >
-                  Demander mon code pro
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+            className="md:hidden overflow-hidden bg-white border-t border-neutral-200"
+          >
+            <div className="px-4 py-4 space-y-3">
+              {[
+                { href: '#comment-ca-marche', label: 'Comment ça marche' },
+                { href: '#solutions', label: 'Instituts & Artisans' },
+                { href: '#transparence', label: 'Notre modèle' },
+                { href: '#faq', label: 'FAQ' },
+              ].map(({ href, label }) => (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-1.5 text-sm text-neutral-700 hover:text-black transition-colors"
+                >
+                  {label}
+                </a>
+              ))}
+              <button
+                onClick={() => { setMobileMenuOpen(false); onOpenContact(); }}
+                className="btn-pressable w-full mt-3 py-3 bg-black text-white text-sm font-medium cursor-pointer"
+              >
+                Obtenir mon code
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
 
-// 2. Hero Section with Interactive Savings Simulator
-function HeroSection({ onSelectActivity }: { onSelectActivity: (act: string, spend: number) => void }) {
-  const [activity, setActivity] = useState<ActivityType>('esthetic');
-  const [monthlySpend, setMonthlySpend] = useState<number>(1400);
-
-  const averageDiscountPct = 0.22;
-  const monthlySavings = Math.round(monthlySpend * averageDiscountPct);
-  const annualSavings = monthlySavings * 12;
-
-  const currentProfile = SIMULATOR_PROFILES[activity];
-
-  const handleActivityChange = (act: ActivityType) => {
-    setActivity(act);
-    setMonthlySpend(SIMULATOR_PROFILES[act].defaultSpend);
-  };
-
+// ─── 2. Hero ───────────────────────────────────────────────────────────────────
+function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
   return (
-    <section className="relative pt-28 sm:pt-32 pb-20 md:pt-36 md:pb-24 overflow-hidden">
-      {/* Background glow orbs */}
-      <div className="absolute top-1/4 -left-48 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/3 -right-48 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* Left Column: Value Proposition & Intent */}
-          <div className="lg:col-span-7 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-950/60 border border-blue-500/30 text-blue-300 text-xs font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Tarifs grossistes négociés pour instituts, salons & artisans de la beauté</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12]">
-              Vos produits professionnels habituels.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-emerald-400">
-                15% à 30% moins chers.
-              </span>
-            </h1>
-
-            <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-[58ch]">
-              Daseis fédère les commandes des instituts, salons et artisans pour négocier des tarifs de groupe directement auprès des fabricants et distributeurs agréés.
-            </p>
-
-            {/* CTAs */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-              <a
-                href="#contact"
-                className="btn-pressable inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-base shadow-lg shadow-blue-600/25 border border-blue-400/30 cursor-pointer"
-              >
-                <span>Obtenir mon code de réduction</span>
-                <ArrowRight size={18} weight="bold" />
-              </a>
-              <a
-                href="#simulateur"
-                className="btn-pressable inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 hover:text-white font-medium text-base border border-white/[0.08]"
-              >
-                <Calculator size={18} className="text-blue-400" />
-                <span>Simuler mes économies</span>
-              </a>
-            </div>
-
-            {/* Quick Guarantees */}
-            <div className="pt-4 grid grid-cols-3 gap-3 border-t border-white/[0.08] text-xs text-slate-400 font-medium">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle size={16} weight="fill" className="text-emerald-400 flex-shrink-0" />
-                <span>100% Gratuit pour l'institut & l'artisan</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck size={16} weight="fill" className="text-emerald-400 flex-shrink-0" />
-                <span>Sans engagement</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Package size={16} weight="fill" className="text-emerald-400 flex-shrink-0" />
-                <span>Direct fabricant</span>
-              </div>
-            </div>
+    <section className="pt-28 sm:pt-36 pb-20 sm:pb-28">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl">
+          <p className="text-xs uppercase tracking-widest text-neutral-500 mb-6">
+            Réseau d'achats professionnels — France
+          </p>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl leading-[1.1] text-black mb-6">
+            Vos fournitures professionnelles,
+            <br />
+            <em>à tarifs de groupe.</em>
+          </h1>
+          <p className="text-base sm:text-lg text-neutral-600 leading-relaxed max-w-xl mb-10">
+            Daseis regroupe les commandes des instituts, salons et artisans indépendants pour accéder aux conditions d'achat réservées aux grands comptes. Service gratuit pour les professionnels.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={onOpenContact}
+              className="btn-pressable inline-flex items-center justify-center px-7 py-3.5 bg-black text-white text-sm font-medium hover:bg-neutral-800 transition-colors cursor-pointer"
+            >
+              Demander mon code partenaire
+            </button>
+            <a
+              href="#comment-ca-marche"
+              className="btn-pressable inline-flex items-center justify-center px-7 py-3.5 border border-neutral-300 text-black text-sm font-medium hover:border-neutral-500 transition-colors"
+            >
+              Comment ça marche
+            </a>
           </div>
 
-          {/* Right Column: Interactive Simulator Card */}
-          <div id="simulateur" className="lg:col-span-5">
-            <div className="relative bg-[#0e1628]/90 rounded-2xl p-6 sm:p-7 border border-white/[0.12] shadow-2xl shadow-black/60 backdrop-blur-xl">
-              {/* Badge header */}
-              <div className="flex items-center justify-between pb-5 border-b border-white/[0.08]">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                    <Calculator size={18} weight="bold" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-white">Simulateur d'économies</h3>
-                    <p className="text-[11px] text-slate-400">Instituts, salons & artisans indépendants</p>
-                  </div>
-                </div>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                  ~22% de remise
-                </span>
-              </div>
-
-              {/* Activity Selector */}
-              <div className="mt-5 space-y-2">
-                <label className="block text-xs font-semibold text-slate-300">
-                  Votre spécialité :
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {(Object.keys(SIMULATOR_PROFILES) as ActivityType[]).map((key) => {
-                    const active = activity === key;
-                    return (
-                      <button
-                        key={key}
-                        onClick={() => handleActivityChange(key)}
-                        type="button"
-                        className={`btn-pressable text-left px-3 py-2 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
-                          active
-                            ? 'bg-blue-600/20 border-blue-500 text-white shadow-sm shadow-blue-500/20'
-                            : 'bg-slate-900/60 border-slate-700/60 text-slate-300 hover:border-slate-600'
-                        }`}
-                      >
-                        {key === 'esthetic' && '✨ Soins, Esthétique & Artisans'}
-                        {key === 'nails' && '💅 Onglerie & Artisans Nails'}
-                        {key === 'hair' && '✂️ Coiffure & Artisans Barbiers'}
-                        {key === 'spa' && '🌿 Spas & Artisans Bien-être'}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Monthly Spend Slider */}
-              <div className="mt-6 space-y-2">
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-slate-300 font-medium">Budget approvisionnement mensuel :</span>
-                  <span className="text-sm font-mono font-bold text-white bg-slate-900 px-2.5 py-1 rounded border border-slate-700">
-                    {monthlySpend.toLocaleString('fr-FR')} € HT / mois
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="400"
-                  max="6000"
-                  step="100"
-                  value={monthlySpend}
-                  onChange={(e) => setMonthlySpend(Number(e.target.value))}
-                  className="w-full accent-blue-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
-                />
-                <div className="flex justify-between text-[10px] text-slate-500 font-mono">
-                  <span>400 €</span>
-                  <span>2 500 €</span>
-                  <span>6 000 €+</span>
-                </div>
-              </div>
-
-              {/* Calculated Result Box */}
-              <div className="mt-6 p-4 rounded-xl bg-gradient-to-br from-emerald-950/40 to-slate-900/80 border border-emerald-500/30">
-                <div className="grid grid-cols-2 gap-4 text-center divide-x divide-white/[0.08]">
-                  <div>
-                    <span className="block text-[11px] text-slate-400 uppercase tracking-wider font-semibold">
-                      Économie estimée
-                    </span>
-                    <span className="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">
-                      +{monthlySavings} €
-                    </span>
-                    <span className="block text-[10px] text-slate-400">chaque mois</span>
-                  </div>
-                  <div>
-                    <span className="block text-[11px] text-slate-400 uppercase tracking-wider font-semibold">
-                      Gain annuel net
-                    </span>
-                    <span className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
-                      +{annualSavings.toLocaleString('fr-FR')} €
-                    </span>
-                    <span className="block text-[10px] text-emerald-400 font-medium">réinvestissable</span>
-                  </div>
-                </div>
-
-                <div className="mt-3 pt-3 border-t border-emerald-500/20 text-[11px] text-slate-300 flex items-start gap-1.5">
-                  <Sparkle size={14} className="text-emerald-400 mt-0.5 flex-shrink-0" weight="fill" />
-                  <span>
-                    <strong>Exemples de consommables remisés :</strong> {currentProfile.sampleProducts}
-                  </span>
-                </div>
-              </div>
-
-              {/* Apply Button */}
-              <div className="mt-5">
-                <a
-                  href="#contact"
-                  onClick={() => onSelectActivity(currentProfile.title, monthlySpend)}
-                  className="btn-pressable w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 shadow-md shadow-blue-600/30 cursor-pointer"
-                >
-                  <span>Activer mon code pour économiser {monthlySavings} €/mois</span>
-                  <ArrowRight size={15} weight="bold" />
-                </a>
-              </div>
-            </div>
-          </div>
+          <p className="mt-6 text-xs text-neutral-500">
+            Rémunération par commission versée par les fournisseurs — aucun frais pour vous.
+          </p>
         </div>
       </div>
     </section>
   );
 }
 
-// 3. Credibility & Numbers Strip
-function CredibilityStrip() {
-  const metrics = [
-    { value: '0 €', label: 'Aucun frais ni abonnement', detail: 'Service 100% gratuit pour praticiens & artisans' },
-    { value: '-15% à -30%', label: 'Remise directe en facture', detail: 'Négociée sur catalogue professionnel' },
-    { value: '100%', label: 'Facturation & envoi direct', detail: 'Par vos marques et distributeurs agréés' },
-    { value: '< 24h', label: 'Délai d\'attribution', detail: 'Réception de votre code promo unique' },
+// ─── 3. Bande de réassurance ───────────────────────────────────────────────────
+function ReassuranceStrip() {
+  const items = [
+    { value: 'Gratuit', label: 'Aucun frais d\'inscription ni d\'abonnement' },
+    { value: 'Remises', label: 'Tarifs négociés directement sur facture' },
+    { value: 'Direct', label: 'Facture et livraison par le fournisseur' },
+    { value: 'Simple', label: 'Un code à appliquer lors de vos commandes' },
   ];
 
   return (
-    <section className="border-y border-white/[0.08] bg-[#0c1322]/60 py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {metrics.map((item, idx) => (
-            <div key={idx} className="space-y-1">
-              <div className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white font-mono tracking-tight">
+    <section className="border-y border-neutral-200 py-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {items.map((item) => (
+            <div key={item.value}>
+              <div className="text-xl sm:text-2xl font-serif text-black mb-1">
                 {item.value}
               </div>
-              <div className="text-xs sm:text-sm font-semibold text-slate-200">
+              <div className="text-xs text-neutral-500 leading-relaxed">
                 {item.label}
-              </div>
-              <div className="text-xs text-slate-400">
-                {item.detail}
               </div>
             </div>
           ))}
@@ -441,351 +213,227 @@ function CredibilityStrip() {
   );
 }
 
-// 4. How It Works (Bento Layout with Asymmetric Rhythm)
+// ─── 4. Comment ça marche ──────────────────────────────────────────────────────
 function HowItWorks() {
+  const steps = [
+    {
+      num: '01',
+      title: 'Vous nous décrivez vos besoins',
+      body: 'Précisez les gammes de consommables et équipements que vous commandez régulièrement : produits de soin, consommables cabine, matériel professionnel.',
+    },
+    {
+      num: '02',
+      title: 'Nous vous attribuons un code partenaire',
+      body: 'Vous recevez un code personnalisé activé chez les grossistes et distributeurs correspondant à vos besoins. Ce code est unique et illimité dans le temps.',
+    },
+    {
+      num: '03',
+      title: 'Vous commandez directement au tarif négocié',
+      body: 'Appliquez votre code lors de vos commandes habituelles. Le fournisseur émet la facture à votre nom et assure la livraison selon ses conditions usuelles.',
+    },
+  ];
+
   return (
-    <section id="comment-ca-marche" className="py-20 sm:py-28 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto text-center mb-16">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Comment fonctionne le réseau Daseis ?
+    <section id="comment-ca-marche" className="py-20 sm:py-28">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-xl mb-14">
+          <h2 className="text-3xl sm:text-4xl text-black mb-4">
+            Comment fonctionne le réseau ?
           </h2>
-          <p className="mt-3 text-base text-slate-300">
-            Une mise en relation directe, transparente et sans engagement en 3 étapes.
+          <p className="text-neutral-600">
+            Trois étapes, sans intermédiaire de trop.
           </p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1 */}
-          <div className="bg-[#0f172a]/80 rounded-2xl p-7 border border-white/[0.08] hover:border-blue-500/40 transition-colors flex flex-col justify-between space-y-6">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 font-mono font-bold text-lg mb-6">
-                01
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">
-                1. Analyse de vos besoins
-              </h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Vous nous précisez les gammes de consommables et équipements que votre institut, salon ou atelier artisanal commande régulièrement.
-              </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 lg:gap-16">
+          {steps.map((step) => (
+            <div key={step.num} className="border-t border-neutral-200 pt-6">
+              <span className="block text-xs text-neutral-400 font-mono mb-4">{step.num}</span>
+              <h3 className="text-xl text-black mb-3">{step.title}</h3>
+              <p className="text-sm text-neutral-600 leading-relaxed">{step.body}</p>
             </div>
-            
-            <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700/60 text-xs text-slate-300 space-y-2">
-              <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                <span>SIMULATION COMPARATIVE</span>
-                <span className="text-emerald-400 font-bold">-24%</span>
-              </div>
-              <div className="flex justify-between font-mono">
-                <span className="text-slate-400">Prix public habituel :</span>
-                <span className="line-through text-slate-500">120,00 €</span>
-              </div>
-              <div className="flex justify-between font-mono font-bold text-emerald-400">
-                <span>Tarif réseau Daseis :</span>
-                <span>91,20 € HT</span>
-              </div>
-            </div>
-          </div>
+          ))}
+        </div>
 
-          {/* Card 2 */}
-          <div className="bg-[#0f172a]/80 rounded-2xl p-7 border border-white/[0.08] hover:border-blue-500/40 transition-colors flex flex-col justify-between space-y-6">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 font-mono font-bold text-lg mb-6">
-                02
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">
-                2. Attribution de votre code
-              </h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Nous vous transmettons votre code partenaire personnel, activé chez les grossistes et marques correspondant à votre besoin.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-gradient-to-r from-blue-950/60 to-slate-900 border border-blue-500/30 text-center">
-              <span className="text-[10px] text-blue-400 font-mono uppercase tracking-wider block mb-1">
-                Exemple de code personnalisé
-              </span>
-              <div className="inline-block px-4 py-1.5 rounded-lg bg-blue-600/20 border border-blue-400/40 text-sm font-mono font-bold text-white tracking-widest">
-                DASEIS-PRO-2026
-              </div>
-              <span className="text-[10px] text-slate-400 block mt-1">Valable sans limite de fréquence</span>
-            </div>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-[#0f172a]/80 rounded-2xl p-7 border border-white/[0.08] hover:border-blue-500/40 transition-colors flex flex-col justify-between space-y-6">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-center justify-center text-blue-400 font-mono font-bold text-lg mb-6">
-                03
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">
-                3. Commande & livraison directe
-              </h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Vous commandez directement sur la boutique ou auprès du commercial de votre fournisseur en appliquant votre code.
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700/60 space-y-2 text-xs">
-              <div className="flex items-center gap-2 text-slate-200">
-                <CheckCircle size={16} weight="fill" className="text-emerald-400 flex-shrink-0" />
-                <span>Facture émise directement par le fournisseur</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-200">
-                <CheckCircle size={16} weight="fill" className="text-emerald-400 flex-shrink-0" />
-                <span>Livraison standard et SAV habituel</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-200">
-                <CheckCircle size={16} weight="fill" className="text-emerald-400 flex-shrink-0" />
-                <span>Zéro frais de service ni commission</span>
-              </div>
-            </div>
-          </div>
+        {/* Mention transparence */}
+        <div className="mt-14 p-6 sm:p-8 border border-neutral-200 bg-neutral-50">
+          <p className="text-xs uppercase tracking-widest text-neutral-500 mb-3">
+            Transparence sur notre rémunération
+          </p>
+          <p className="text-sm sm:text-base text-neutral-700 leading-relaxed max-w-3xl">
+            Le service est entièrement gratuit pour vous. Daseis est exclusivement rémunéré par une commission d'apporteur d'affaires versée par les fournisseurs partenaires, uniquement lorsque vous passez une commande avec votre code. Vous ne payez jamais rien à Daseis.
+          </p>
         </div>
       </div>
     </section>
   );
 }
 
-// 5. Dual Persona Section (Instituts, Salons & Artisans vs Fournisseurs)
-function AudienceSolutions({ onOpenContact }: { onOpenContact: (role: 'institut' | 'fournisseur') => void }) {
+// ─── 5. Solutions ──────────────────────────────────────────────────────────────
+function AudienceSolutions({ onOpenContact }: { onOpenContact: () => void }) {
   const [activeTab, setActiveTab] = useState<'institut' | 'fournisseur'>('institut');
 
   return (
-    <section id="solutions" className="py-20 bg-[#0b101f] border-y border-white/[0.08]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Une solution pensée pour chacun
+    <section id="solutions" className="py-20 sm:py-28 bg-neutral-50 border-y border-neutral-200">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-12">
+          <h2 className="text-3xl sm:text-4xl text-black mb-4">
+            Une plateforme pour deux acteurs
           </h2>
-          <p className="mt-3 text-base text-slate-300">
-            Daseis connecte les deux extrémités de la chaîne d'approvisionnement en supprimant les frictions.
-          </p>
-
-          {/* Segmented Button */}
-          <div className="mt-8 inline-flex p-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80">
+          {/* Onglets */}
+          <div className="flex gap-0 mt-8 border-b border-neutral-200">
             <button
               onClick={() => setActiveTab('institut')}
-              className={`btn-pressable px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2 ${
+              className={`btn-pressable px-6 py-3 text-sm font-medium border-b-2 -mb-px cursor-pointer transition-colors ${
                 activeTab === 'institut'
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'border-black text-black'
+                  : 'border-transparent text-neutral-500 hover:text-black'
               }`}
             >
-              <Storefront size={18} weight="bold" />
-              <span>Pour les Instituts, Salons & Artisans</span>
+              Instituts, Salons & Artisans
             </button>
             <button
               onClick={() => setActiveTab('fournisseur')}
-              className={`btn-pressable px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors cursor-pointer flex items-center gap-2 ${
+              className={`btn-pressable px-6 py-3 text-sm font-medium border-b-2 -mb-px cursor-pointer transition-colors ${
                 activeTab === 'fournisseur'
-                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'border-black text-black'
+                  : 'border-transparent text-neutral-500 hover:text-black'
               }`}
             >
-              <Buildings size={18} weight="bold" />
-              <span>Pour les Fournisseurs & Marques</span>
+              Fournisseurs & Marques
             </button>
           </div>
         </div>
 
-        {/* Content Tabs */}
         <AnimatePresence mode="wait">
           {activeTab === 'institut' ? (
             <motion.div
               key="institut"
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-              className="grid lg:grid-cols-12 gap-8 items-center"
+              className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start"
             >
-              <div className="lg:col-span-6 space-y-6">
-                <span className="text-xs font-mono uppercase tracking-wider text-blue-400 font-semibold">
-                  Instituts de beauté · Salons · Artisans indépendants · Ateliers de soin
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                  Diminuez vos charges fixes sans rogner sur la qualité de vos prestations.
+              <div>
+                <h3 className="text-2xl sm:text-3xl text-black mb-4">
+                  Réduire vos charges sans changer vos habitudes d'achat.
                 </h3>
-                <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                  En tant qu'artisan indépendant, praticien ou gérant d'institut, vous n'avez pas le temps de négocier avec chaque marque. Daseis regroupe les demandes et vous fait bénéficier de remises grand compte.
+                <p className="text-sm text-neutral-600 leading-relaxed mb-8">
+                  En tant qu'artisan ou praticien indépendant, vous n'avez pas le poids commercial d'une grande enseigne. Daseis regroupe les demandes pour vous donner accès aux mêmes conditions tarifaires que les acheteurs de volumes.
                 </p>
-
-                <div className="space-y-3.5 pt-2">
-                  <div className="flex items-start gap-3">
-                    <div className="p-1 rounded bg-blue-500/10 text-blue-400 mt-0.5">
-                      <CheckCircle size={18} weight="bold" />
+                <div className="space-y-5">
+                  {[
+                    {
+                      title: 'Circuits d\'approvisionnement officiels',
+                      body: 'Uniquement des distributeurs agréés et des fabricants référencés. Aucun circuit parallèle.',
+                    },
+                    {
+                      title: 'Sans engagement de volume',
+                      body: 'Commandez selon vos besoins réels, à la fréquence qui vous convient.',
+                    },
+                    {
+                      title: 'Service intégralement gratuit',
+                      body: 'Vous ne payez que le montant de votre commande, après réduction appliquée.',
+                    },
+                  ].map((item) => (
+                    <div key={item.title} className="border-t border-neutral-200 pt-5">
+                      <h4 className="text-sm font-medium text-black mb-1">{item.title}</h4>
+                      <p className="text-xs text-neutral-500 leading-relaxed">{item.body}</p>
                     </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-white">Marques certifiées et stocks officiels</h4>
-                      <p className="text-xs text-slate-400">Aucun produit reconditionné ou circuit parallèle : uniquement des circuits officiels.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="p-1 rounded bg-blue-500/10 text-blue-400 mt-0.5">
-                      <CheckCircle size={18} weight="bold" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-white">Sans engagement de volume</h4>
-                      <p className="text-xs text-slate-400">Commandez selon vos réels besoins, à la fréquence qui vous convient.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="p-1 rounded bg-blue-500/10 text-blue-400 mt-0.5">
-                      <CheckCircle size={18} weight="bold" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-white">Service 100% gratuit</h4>
-                      <p className="text-xs text-slate-400">Vous ne payez que le montant de votre commande après réduction appliquée.</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-
-                <div className="pt-4">
+                <div className="mt-10">
                   <button
-                    onClick={() => onOpenContact('institut')}
-                    className="btn-pressable inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shadow-md cursor-pointer"
+                    onClick={onOpenContact}
+                    className="btn-pressable px-7 py-3.5 bg-black text-white text-sm font-medium hover:bg-neutral-800 transition-colors cursor-pointer"
                   >
-                    <span>Je souhaite recevoir mes codes instituts & artisans</span>
-                    <ArrowRight size={16} weight="bold" />
+                    Recevoir mon code partenaire
                   </button>
                 </div>
               </div>
 
-              <div className="lg:col-span-6 bg-slate-900/90 rounded-2xl p-6 sm:p-8 border border-white/[0.08] space-y-4">
-                <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400">
-                  Cas d'usage réels constatés
-                </h4>
-                
-                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-semibold text-white text-sm">Cires à épiler & spatules</span>
-                    <span className="font-mono text-xs text-emerald-400 font-bold">-28% constatés</span>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    Économie moyenne de 140 €/mois pour un salon réalisant 15 épilations/jour.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-semibold text-white text-sm">Gels & vernis semi-permanents</span>
-                    <span className="font-mono text-xs text-emerald-400 font-bold">-22% constatés</span>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    Plus de 250 couleurs professionnelles accessibles sans minimum par teinte.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-semibold text-white text-sm">Consommables hygiène & draps</span>
-                    <span className="font-mono text-xs text-emerald-400 font-bold">-18% constatés</span>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    Paniers groupés livrés directement en carton pro avec facturation TVA standard.
-                  </p>
+              <div className="bg-white border border-neutral-200 p-6 sm:p-8">
+                <p className="text-xs uppercase tracking-widest text-neutral-400 mb-6">
+                  Exemples de produits concernés
+                </p>
+                <div className="space-y-4">
+                  {[
+                    { cat: 'Soins esthétique', ex: 'Cires pelables, lotions pré/post, consommables cabine' },
+                    { cat: 'Onglerie', ex: 'Gels UV/LED, vernis semi-permanents, embouts ponceuse' },
+                    { cat: 'Coiffure', ex: 'Colorations, shampoings professionnels, oxydants' },
+                    { cat: 'Hygiène & jetables', ex: 'Draps d\'examen, gants, consommables stériles' },
+                  ].map((row) => (
+                    <div key={row.cat} className="flex justify-between items-start py-3 border-b border-neutral-100">
+                      <span className="text-sm text-black">{row.cat}</span>
+                      <span className="text-xs text-neutral-500 max-w-[55%] text-right">{row.ex}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </motion.div>
           ) : (
             <motion.div
               key="fournisseur"
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-              className="grid lg:grid-cols-12 gap-8 items-center"
+              className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start"
             >
-              <div className="lg:col-span-6 space-y-6">
-                <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold">
-                  Grossistes · Distributeurs · Fabricants de cosmétiques
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                  Développez votre clientèle pro sans prospection commerciale fastidieuse.
+              <div>
+                <h3 className="text-2xl sm:text-3xl text-black mb-4">
+                  Accéder à de nouveaux clients professionnels sans prospection.
                 </h3>
-                <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                  Daseis vous amène des instituts, salons et artisans prêts à commander, en quête de marques sérieuses et d'approvisionnements récurrents.
+                <p className="text-sm text-neutral-600 leading-relaxed mb-8">
+                  Daseis vous met en relation avec des instituts, salons et artisans qualifiés à la recherche de fournisseurs sérieux. L'intégration technique se limite à un code promo ou paramètre URL sur votre plateforme existante.
                 </p>
-
-                <div className="space-y-3.5 pt-2">
-                  <div className="flex items-start gap-3">
-                    <div className="p-1 rounded bg-emerald-500/10 text-emerald-400 mt-0.5">
-                      <CheckCircle size={18} weight="bold" />
+                <div className="space-y-5">
+                  {[
+                    {
+                      title: 'Clients professionnels vérifiés',
+                      body: 'Chaque établissement est qualifié avec SIRET actif et activité vérifiée avant d\'intégrer le réseau.',
+                    },
+                    {
+                      title: 'Modèle 100% à la performance',
+                      body: 'Aucun coût fixe, aucun abonnement. Vous versez une commission uniquement sur les commandes effectives.',
+                    },
+                    {
+                      title: 'Intégration technique minimale',
+                      body: 'Un simple code promo sur votre boutique en ligne ou système de commande suffit.',
+                    },
+                  ].map((item) => (
+                    <div key={item.title} className="border-t border-neutral-200 pt-5">
+                      <h4 className="text-sm font-medium text-black mb-1">{item.title}</h4>
+                      <p className="text-xs text-neutral-500 leading-relaxed">{item.body}</p>
                     </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-white">Nouveaux comptes professionnels vérifiés</h4>
-                      <p className="text-xs text-slate-400">Chaque établissement demandeur est qualifié (SIRET actif, activité beauté vérifiée).</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="p-1 rounded bg-emerald-500/10 text-emerald-400 mt-0.5">
-                      <CheckCircle size={18} weight="bold" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-white">Modèle 100% à la performance</h4>
-                      <p className="text-xs text-slate-400">Aucun coût fixe, aucun forfait : vous ne réglez une commission que sur les ventes effectives.</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="p-1 rounded bg-emerald-500/10 text-emerald-400 mt-0.5">
-                      <CheckCircle size={18} weight="bold" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-white">Intégration technique ultra simple</h4>
-                      <p className="text-xs text-slate-400">Un simple code promo ou paramètre d'URL sur votre plateforme e-commerce existante suffit.</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-
-                <div className="pt-4">
+                <div className="mt-10">
                   <button
-                    onClick={() => onOpenContact('fournisseur')}
-                    className="btn-pressable inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm shadow-md cursor-pointer"
+                    onClick={onOpenContact}
+                    className="btn-pressable px-7 py-3.5 bg-black text-white text-sm font-medium hover:bg-neutral-800 transition-colors cursor-pointer"
                   >
-                    <span>Rejoindre le réseau fournisseurs</span>
-                    <ArrowRight size={16} weight="bold" />
+                    Rejoindre le réseau fournisseurs
                   </button>
                 </div>
               </div>
 
-              <div className="lg:col-span-6 bg-slate-900/90 rounded-2xl p-6 sm:p-8 border border-white/[0.08] space-y-4">
-                <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400">
-                  Pourquoi les marques collaborent avec Daseis
-                </h4>
-                
-                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-semibold text-white text-sm">Fidélisation & Récurrence</span>
-                    <span className="font-mono text-xs text-emerald-400 font-bold">Panier récurrent</span>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    Les instituts et artisans réapprovisionnent leurs stocks toutes les 3 à 5 semaines de manière prévisible.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-semibold text-white text-sm">Coût d'acquisition divisé par 3</span>
-                    <span className="font-mono text-xs text-emerald-400 font-bold">ROI mesurable</span>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    Évitez les salons professionnels coûteux et la prospection téléphonique infructueuse.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-semibold text-white text-sm">Maîtrise de votre image de marque</span>
-                    <span className="font-mono text-xs text-emerald-400 font-bold">Distributeur officiel</span>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    Vous conservez le contrôle total de vos conditions générales de vente et de vos expéditions.
-                  </p>
+              <div className="bg-white border border-neutral-200 p-6 sm:p-8">
+                <p className="text-xs uppercase tracking-widest text-neutral-400 mb-6">
+                  Pourquoi les marques choisissent Daseis
+                </p>
+                <div className="space-y-4">
+                  {[
+                    { titre: 'Clientèle récurrente', detail: 'Les professionnels réapprovisionnent régulièrement leurs stocks de consommables.' },
+                    { titre: 'Maîtrise de votre image', detail: 'Vous conservez le contrôle de vos CGV, prix et expéditions. Daseis n\'intervient pas dans la relation commerciale.' },
+                    { titre: 'Aucun coût d\'entrée', detail: 'Pas de frais d\'inscription. Le partenariat démarre dès l\'activation de votre premier code.' },
+                  ].map((row) => (
+                    <div key={row.titre} className="py-3 border-b border-neutral-100">
+                      <span className="block text-sm text-black mb-0.5">{row.titre}</span>
+                      <span className="text-xs text-neutral-500">{row.detail}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </motion.div>
@@ -796,53 +444,53 @@ function AudienceSolutions({ onOpenContact }: { onOpenContact: (role: 'institut'
   );
 }
 
-// 6. Transparence & Business Model
+// ─── 6. Modèle de transparence ─────────────────────────────────────────────────
 function TransparencySection() {
   return (
-    <section id="transparence" className="py-20 bg-[#080d1a] relative">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-medium mb-6">
-          <Handshake size={15} className="text-blue-400" />
-          <span>Notre engagement de transparence</span>
-        </div>
-
-        <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Pourquoi ce service est-il 100% gratuit pour vous ?
-        </h2>
-        
-        <p className="mt-4 text-base sm:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed">
-          Nous croyons qu'un modèle pérenne doit être limpide. Daseis est rémunéré par les grossistes partenaires sous la forme d'un pourcentage d'apport d'affaires lorsqu'une commande est passée avec votre code.
-        </p>
-
-        <div className="mt-12 grid sm:grid-cols-3 gap-6 text-left">
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-white/[0.08]">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold mb-4">
-              1
-            </div>
-            <h3 className="text-base font-bold text-white mb-2">Pour l'Institut & l'Artisan</h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Vous accédez immédiatement aux prix négociés de groupe, sans abonnement, sans cotisation et sans engagement de durée.
+    <section id="transparence" className="py-20 sm:py-28">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          <div>
+            <p className="text-xs uppercase tracking-widest text-neutral-500 mb-4">
+              Notre modèle économique
+            </p>
+            <h2 className="text-3xl sm:text-4xl text-black mb-6">
+              Pourquoi le service est gratuit pour vous.
+            </h2>
+            <p className="text-sm text-neutral-600 leading-relaxed mb-6">
+              Daseis est rémunéré exclusivement par une commission d'apporteur d'affaires versée par les fournisseurs partenaires. Cette commission est calculée sur le montant des commandes réalisées avec votre code.
+            </p>
+            <p className="text-sm text-neutral-600 leading-relaxed">
+              Vous ne payez jamais de frais d'inscription, d'abonnement mensuel ni de frais de gestion. La réduction que vous obtenez est négociée en amont avec chaque fournisseur, indépendamment de notre commission.
             </p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-white/[0.08]">
-            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold mb-4">
-              2
-            </div>
-            <h3 className="text-base font-bold text-white mb-2">Pour le Fournisseur</h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Il acquiert de nouveaux clients professionnels fidèles et rentabilise ses volumes de production sans frais fixes commerciaux.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-slate-900/80 border border-white/[0.08]">
-            <div className="w-10 h-10 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 font-bold mb-4">
-              3
-            </div>
-            <h3 className="text-base font-bold text-white mb-2">Pour Daseis</h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Une commission versée uniquement en cas de commande réelle. Si vous ne trouvez pas votre bonheur, vous n'avez rien déboursé.
-            </p>
+          <div className="space-y-0">
+            {[
+              {
+                num: '1',
+                who: 'Pour vous',
+                text: 'Accès aux tarifs de groupe sans aucun frais ni engagement. Vous commandez auprès de vos fournisseurs habituels avec un code de réduction.',
+              },
+              {
+                num: '2',
+                who: 'Pour le fournisseur',
+                text: 'Il accède à de nouveaux clients professionnels récurrents. Il verse à Daseis une commission uniquement sur les commandes effectives.',
+              },
+              {
+                num: '3',
+                who: 'Pour Daseis',
+                text: 'La commission du fournisseur constitue notre seule source de rémunération. Si vous ne commandez pas, nous ne percevons rien.',
+              },
+            ].map((item) => (
+              <div key={item.num} className="flex gap-6 py-6 border-t border-neutral-200">
+                <span className="text-xs text-neutral-400 font-mono pt-0.5 shrink-0">{item.num}</span>
+                <div>
+                  <span className="block text-sm font-medium text-black mb-1">{item.who}</span>
+                  <p className="text-sm text-neutral-600 leading-relaxed">{item.text}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -850,264 +498,290 @@ function TransparencySection() {
   );
 }
 
-// 7. FAQ Accordion
+// ─── 7. FAQ ────────────────────────────────────────────────────────────────────
 function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const faqs = [
     {
-      q: 'Le service Daseis est-il réellement 100% gratuit pour les instituts et artisans ?',
-      a: 'Oui, sans aucune exception. Vous ne paierez jamais d\'inscription, d\'abonnement mensuel ni de frais de gestion. Nous sommes rémunérés directement par nos fournisseurs partenaires sous la forme d\'une commission d\'apporteur d\'affaires.',
+      q: 'Le service est-il vraiment gratuit pour les instituts et artisans ?',
+      a: "Oui. Vous ne payez jamais d'inscription, d'abonnement ni de frais de gestion. Daseis est rémunéré directement par les fournisseurs partenaires sous la forme d'une commission d'apporteur d'affaires, uniquement sur les commandes que vous passez.",
     },
     {
-      q: 'Comment s\'applique concrètement la réduction lors de mes commandes ?',
-      a: 'Dès validation de votre profil professionnel, vous recevez un code de réduction unique. Il vous suffit de le saisir dans la case "Code Promo / Code Partenaire" sur le site e-commerce du fournisseur agréé ou de l\'indiquer à votre commercial dédié.',
+      q: 'Comment s\'applique la réduction lors de mes commandes ?',
+      a: "Après validation de votre demande, vous recevez un code partenaire personnel. Saisissez ce code dans le champ \"Code promo\" ou \"Code partenaire\" du site du fournisseur, ou communiquez-le à votre commercial dédié.",
     },
     {
-      q: 'Puis-je continuer à commander mes marques favorites ?',
-      a: 'Absolument. Si votre fournisseur actuel fait déjà partie de notre réseau, nous vous activons la remise sur son catalogue. S\'il n\'en fait pas encore partie, vous pouvez nous transmettre ses coordonnées et notre équipe de négociation le contactera pour ouvrir un partenariat de groupe.',
+      q: 'Puis-je commander auprès de mes fournisseurs actuels ?',
+      a: "Si votre fournisseur fait partie de notre réseau, la remise est activée immédiatement. Dans le cas contraire, transmettez-nous ses coordonnées et nous étudions l'ouverture d'un partenariat.",
     },
     {
-      q: 'Y a-t-il un montant minimum de commande imposé ?',
-      a: 'Daseis n\'impose aucun minimum. Seules les conditions habituelles du fournisseur s\'appliquent (par exemple le seuil de franco de port pour bénéficier de la livraison offerte).',
+      q: 'Y a-t-il un montant minimum de commande ?',
+      a: "Daseis n'impose aucun minimum. Seules les conditions habituelles du fournisseur s'appliquent, comme le seuil de franco de port.",
     },
     {
-      q: 'Comment fonctionne la facturation et la récupération de TVA ?',
-      a: 'La facturation est émise directement par le fournisseur à l\'adresse de votre institut ou atelier artisanal. Votre facture comporte toutes les mentions légales requises et vous récupérez votre TVA déductible normalement.',
+      q: 'Comment fonctionne la facturation ?',
+      a: "La facture est émise directement par le fournisseur à l'adresse de votre établissement. Elle comporte toutes les mentions légales nécessaires à la récupération de la TVA.",
     },
   ];
 
   return (
-    <section id="faq" className="py-20 bg-[#080d1a]">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Foire aux questions
-          </h2>
-          <p className="mt-2 text-sm text-slate-400">
-            Toutes les réponses à vos interrogations avant de commencer.
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          {faqs.map((faq, idx) => {
-            const isOpen = openIndex === idx;
-            return (
-              <div
-                key={idx}
-                className="rounded-xl border border-white/[0.08] bg-slate-900/60 overflow-hidden transition-colors"
-              >
-                <button
-                  type="button"
-                  onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
-                >
-                  <span className="text-sm sm:text-base font-semibold text-slate-200">
-                    {faq.q}
-                  </span>
-                  <motion.div
-                    animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                    className="flex-shrink-0 text-slate-400"
+    <section id="faq" className="py-20 sm:py-28 bg-neutral-50 border-y border-neutral-200">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-3 gap-12">
+          <div>
+            <h2 className="text-3xl sm:text-4xl text-black">
+              Questions fréquentes
+            </h2>
+          </div>
+          <div className="lg:col-span-2 space-y-0">
+            {faqs.map((faq, idx) => {
+              const isOpen = openIndex === idx;
+              return (
+                <div key={idx} className="border-t border-neutral-200">
+                  <button
+                    type="button"
+                    onClick={() => setOpenIndex(isOpen ? null : idx)}
+                    className="w-full py-5 text-left flex items-start justify-between gap-6 cursor-pointer focus:outline-none group"
                   >
-                    <CaretDown size={18} weight="bold" />
-                  </motion.div>
-                </button>
-
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-                    >
-                      <div className="px-4 pb-5 sm:px-5 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-white/[0.04] pt-3">
-                        {faq.a}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
+                    <span className="text-sm font-medium text-black group-hover:text-neutral-600 transition-colors">
+                      {faq.q}
+                    </span>
+                    <span className="text-neutral-400 shrink-0 mt-0.5 text-lg leading-none">
+                      {isOpen ? '−' : '+'}
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <p className="pb-5 text-sm text-neutral-600 leading-relaxed pr-8">
+                          {faq.a}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+            <div className="border-t border-neutral-200" />
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-// 8. Contact & Request Form (Integrated with Resend API endpoint)
-function ContactForm({ 
-  prefilledActivity, 
-  onOpenLegal 
-}: { 
-  prefilledActivity?: string; 
-  onOpenLegal: (tab: LegalTab) => void;
-}) {
+// ─── 8. Simulateur d'économies ─────────────────────────────────────────────────
+function SavingsSimulator() {
+  const [activity, setActivity] = useState<ActivityType>('esthetic');
+  const [monthlySpend, setMonthlySpend] = useState(1400);
+
+  const handleActivityChange = (act: ActivityType) => {
+    setActivity(act);
+    setMonthlySpend(SIMULATOR_PROFILES[act].defaultSpend);
+  };
+
+  // Estimation prudente et honnête : 15% (fourchette basse)
+  const estimatedSavingsLow = Math.round(monthlySpend * 0.15);
+  const estimatedSavingsHigh = Math.round(monthlySpend * 0.25);
+
+  return (
+    <section id="simulateur" className="py-20 sm:py-28">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          <div>
+            <p className="text-xs uppercase tracking-widest text-neutral-500 mb-4">
+              Estimation indicative
+            </p>
+            <h2 className="text-3xl sm:text-4xl text-black mb-4">
+              Évaluez votre potentiel d'économies.
+            </h2>
+            <p className="text-sm text-neutral-600 leading-relaxed">
+              Ces estimations sont indicatives, basées sur une fourchette de remise généralement constatée entre 15% et 25% selon les produits et fournisseurs. Le résultat réel dépend de votre catalogue et des partenariats actifs.
+            </p>
+          </div>
+
+          <div className="bg-white border border-neutral-200 p-6 sm:p-8">
+            {/* Sélection spécialité */}
+            <div className="mb-6">
+              <label className="block text-xs font-medium text-neutral-600 mb-3">
+                Votre spécialité
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {(Object.keys(SIMULATOR_PROFILES) as ActivityType[]).map((key) => (
+                  <button
+                    key={key}
+                    onClick={() => handleActivityChange(key)}
+                    type="button"
+                    className={`btn-pressable px-3 py-2.5 text-xs font-medium border transition-colors cursor-pointer text-left ${
+                      activity === key
+                        ? 'border-black text-black bg-neutral-50'
+                        : 'border-neutral-200 text-neutral-600 hover:border-neutral-400'
+                    }`}
+                  >
+                    {SIMULATOR_PROFILES[key].label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Curseur */}
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-2">
+                <label className="text-xs font-medium text-neutral-600">
+                  Budget mensuel d'approvisionnement
+                </label>
+                <span className="text-sm font-medium text-black">
+                  {monthlySpend.toLocaleString('fr-FR')} € HT
+                </span>
+              </div>
+              <input
+                type="range"
+                min="400"
+                max="6000"
+                step="100"
+                value={monthlySpend}
+                onChange={(e) => setMonthlySpend(Number(e.target.value))}
+                className="w-full accent-black cursor-pointer h-px bg-neutral-200"
+              />
+              <div className="flex justify-between text-[10px] text-neutral-400 mt-1">
+                <span>400 €</span>
+                <span>6 000 €</span>
+              </div>
+            </div>
+
+            {/* Résultat */}
+            <div className="border border-neutral-200 p-5 bg-neutral-50">
+              <p className="text-xs text-neutral-500 mb-4">Économie mensuelle estimée (fourchette indicative)</p>
+              <div className="text-2xl sm:text-3xl font-serif text-black">
+                {estimatedSavingsLow.toLocaleString('fr-FR')} € à {estimatedSavingsHigh.toLocaleString('fr-FR')} €
+              </div>
+              <p className="text-xs text-neutral-400 mt-2">
+                Soit {(estimatedSavingsLow * 12).toLocaleString('fr-FR')} € à {(estimatedSavingsHigh * 12).toLocaleString('fr-FR')} € sur l'année — à titre indicatif uniquement.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── 9. Formulaire de contact ──────────────────────────────────────────────────
+function ContactForm({ onOpenLegal }: { onOpenLegal: (tab: LegalTab) => void }) {
   const [role, setRole] = useState<'institut' | 'fournisseur'>('institut');
   const [formData, setFormData] = useState({
     name: '',
     businessName: '',
-    activity: prefilledActivity || '',
+    activity: '',
     email: '',
     phone: '',
     message: '',
   });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [copiedCode, setCopiedCode] = useState(false);
-
-  React.useEffect(() => {
-    if (prefilledActivity) {
-      setFormData(prev => ({ ...prev, activity: prefilledActivity }));
-    }
-  }, [prefilledActivity]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
-      // Envoi de l'email via Resend vers daseis.foundation@gmail.com
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, role }),
       });
-      if (!res.ok) {
-        const errJson = await res.json().catch(() => null);
-        console.warn('Statut envoi notification email :', res.status, errJson);
-      }
+      if (!res.ok) console.warn('Réponse API :', res.status);
     } catch (err) {
-      console.warn('Notification envoyée (fallback mode) :', err);
+      console.warn('Envoi (mode fallback) :', err);
     } finally {
       setIsSubmitting(false);
       setIsSuccess(true);
     }
   };
 
-  const demoPromoCode = 'DASEIS-VIP-' + Math.floor(1000 + Math.random() * 9000);
-
-  const copyCode = () => {
-    navigator.clipboard?.writeText(demoPromoCode);
-    setCopiedCode(true);
-    setTimeout(() => setCopiedCode(false), 2000);
-  };
+  const inputClass =
+    'w-full px-4 py-3 bg-white border border-neutral-200 text-black placeholder:text-neutral-400 text-sm focus:outline-none focus:border-black transition-colors';
 
   return (
-    <section id="contact" className="py-20 bg-[#090f1e] border-t border-white/[0.08]">
+    <section id="contact" className="py-20 sm:py-28 border-t border-neutral-200">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Obtenez votre code partenaire
+        <div className="mb-10">
+          <h2 className="text-3xl sm:text-4xl text-black mb-3">
+            Obtenir mon code partenaire
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-slate-300">
-            Remplissez ce formulaire rapide pour recevoir la liste de vos tarifs remisés par email.
+          <p className="text-sm text-neutral-600">
+            Renseignez vos coordonnées. Nous vous revenons sous 24 heures ouvrées.
           </p>
         </div>
 
         {isSuccess ? (
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-            className="p-8 rounded-2xl bg-slate-900 border border-emerald-500/40 text-center space-y-5 shadow-2xl"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="border border-neutral-200 p-8 sm:p-10 bg-neutral-50 text-center"
           >
-            <div className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
-              <CheckCircle size={36} weight="fill" />
-            </div>
-
-            <div className="space-y-1">
-              <h3 className="text-xl font-bold text-white">Demande enregistrée avec succès !</h3>
-              <p className="text-sm text-slate-300">
-                Merci <strong>{formData.name || 'cher confrère'}</strong>. Votre demande a été transmise à notre service support (<span className="text-blue-400 font-mono text-xs">daseis.foundation@gmail.com</span>).
-              </p>
-            </div>
-
-            <div className="p-4 rounded-xl bg-slate-800/80 border border-slate-700 max-w-sm mx-auto space-y-2">
-              <span className="text-[11px] uppercase tracking-wider text-slate-400 block font-mono">
-                Votre référence dossier temporaire :
-              </span>
-              <div className="flex items-center justify-center gap-2">
-                <span className="font-mono font-bold text-base text-emerald-400">
-                  {demoPromoCode}
-                </span>
-                <button
-                  type="button"
-                  onClick={copyCode}
-                  className="p-1.5 rounded bg-slate-700 hover:bg-slate-600 text-white transition-colors"
-                  title="Copier"
-                >
-                  {copiedCode ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
-                </button>
-              </div>
-            </div>
-
-            <p className="text-xs text-slate-400">
-              Un conseiller prendra contact sous 24h ouvrées pour vous remettre votre catalogue remisé.
+            <h3 className="text-2xl font-serif text-black mb-3">Demande enregistrée.</h3>
+            <p className="text-sm text-neutral-600 mb-6">
+              Merci <strong>{formData.name || 'pour votre intérêt'}</strong>. Votre demande a été transmise à notre équipe.
+              Vous recevrez une réponse à <strong>{formData.email}</strong> sous 24 heures ouvrées.
             </p>
-
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsSuccess(false);
-                  setFormData({ name: '', businessName: '', activity: '', email: '', phone: '', message: '' });
-                }}
-                className="btn-pressable text-xs font-semibold text-blue-400 hover:text-blue-300 underline"
-              >
-                Faire une autre demande
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setIsSuccess(false);
+                setFormData({ name: '', businessName: '', activity: '', email: '', phone: '', message: '' });
+              }}
+              className="text-xs text-neutral-500 underline underline-offset-4 hover:text-black transition-colors cursor-pointer"
+            >
+              Faire une autre demande
+            </button>
           </motion.div>
         ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="bg-[#0e1628] p-6 sm:p-8 rounded-2xl border border-white/[0.1] shadow-2xl space-y-6"
-          >
-            {/* Persona switcher */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Persona */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-2">
-                Vous êtes :
-              </label>
+              <label className="block text-xs font-medium text-neutral-600 mb-2">Vous êtes</label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setRole('institut')}
-                  className={`btn-pressable py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold border flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`btn-pressable py-3 text-sm font-medium border cursor-pointer transition-colors ${
                     role === 'institut'
-                      ? 'bg-blue-600/25 border-blue-500 text-white'
-                      : 'bg-slate-900/60 border-slate-700/60 text-slate-400 hover:text-white'
+                      ? 'border-black text-black bg-neutral-50'
+                      : 'border-neutral-200 text-neutral-600 hover:border-neutral-400'
                   }`}
                 >
-                  <Storefront size={16} />
-                  <span>Un Institut, Salon ou Artisan</span>
+                  Institut, Salon ou Artisan
                 </button>
                 <button
                   type="button"
                   onClick={() => setRole('fournisseur')}
-                  className={`btn-pressable py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold border flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`btn-pressable py-3 text-sm font-medium border cursor-pointer transition-colors ${
                     role === 'fournisseur'
-                      ? 'bg-emerald-600/25 border-emerald-500 text-white'
-                      : 'bg-slate-900/60 border-slate-700/60 text-slate-400 hover:text-white'
+                      ? 'border-black text-black bg-neutral-50'
+                      : 'border-neutral-200 text-neutral-600 hover:border-neutral-400'
                   }`}
                 >
-                  <Buildings size={16} />
-                  <span>Un Fournisseur / Marque</span>
+                  Fournisseur ou Marque
                 </button>
               </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="name" className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label htmlFor="name" className="block text-xs font-medium text-neutral-600 mb-1.5">
                   Nom et Prénom *
                 </label>
                 <input
@@ -1117,14 +791,13 @@ function ContactForm({
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Ex : Claire Laurent"
-                  className="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder:text-slate-600 text-sm focus:border-blue-500 transition-colors"
+                  placeholder="Claire Laurent"
+                  className={inputClass}
                 />
               </div>
-
               <div>
-                <label htmlFor="businessName" className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Établissement ou Atelier artisanal *
+                <label htmlFor="businessName" className="block text-xs font-medium text-neutral-600 mb-1.5">
+                  Établissement *
                 </label>
                 <input
                   type="text"
@@ -1133,15 +806,15 @@ function ContactForm({
                   required
                   value={formData.businessName}
                   onChange={handleChange}
-                  placeholder="Ex : L'Institut & Atelier Beauté"
-                  className="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder:text-slate-600 text-sm focus:border-blue-500 transition-colors"
+                  placeholder="Institut Beauté"
+                  className={inputClass}
                 />
               </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="email" className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label htmlFor="email" className="block text-xs font-medium text-neutral-600 mb-1.5">
                   Email professionnel *
                 </label>
                 <input
@@ -1152,13 +825,12 @@ function ContactForm({
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="contact@moninstitut.fr"
-                  className="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder:text-slate-600 text-sm focus:border-blue-500 transition-colors"
+                  className={inputClass}
                 />
               </div>
-
               <div>
-                <label htmlFor="phone" className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Téléphone (pour envoi SMS du code)
+                <label htmlFor="phone" className="block text-xs font-medium text-neutral-600 mb-1.5">
+                  Téléphone
                 </label>
                 <input
                   type="tel"
@@ -1167,14 +839,14 @@ function ContactForm({
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="06 12 34 56 78"
-                  className="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder:text-slate-600 text-sm focus:border-blue-500 transition-colors"
+                  className={inputClass}
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="activity" className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Produits recherchés ou marques habituelles
+              <label htmlFor="activity" className="block text-xs font-medium text-neutral-600 mb-1.5">
+                Produits ou marques habituels
               </label>
               <input
                 type="text"
@@ -1182,14 +854,14 @@ function ContactForm({
                 name="activity"
                 value={formData.activity}
                 onChange={handleChange}
-                placeholder="Ex : Cires pelables, gels UV, soins cabine, shampoings..."
-                className="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder:text-slate-600 text-sm focus:border-blue-500 transition-colors"
+                placeholder="Cires pelables, gels UV, shampoings professionnels…"
+                className={inputClass}
               />
             </div>
 
             <div>
-              <label htmlFor="message" className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Précisions supplémentaires (facultatif)
+              <label htmlFor="message" className="block text-xs font-medium text-neutral-600 mb-1.5">
+                Précisions (facultatif)
               </label>
               <textarea
                 id="message"
@@ -1197,73 +869,54 @@ function ContactForm({
                 rows={3}
                 value={formData.message}
                 onChange={handleChange}
-                placeholder="Une question particulière sur vos fournisseurs actuels ?"
-                className="w-full px-3.5 py-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder:text-slate-600 text-sm focus:border-blue-500 transition-colors resize-none"
+                placeholder="Une question sur vos fournisseurs actuels ?"
+                className={inputClass + ' resize-none'}
               />
             </div>
 
-            <div className="space-y-3 pt-2">
-              <div className="flex items-start gap-2.5 text-xs text-slate-400">
-                <input
-                  type="checkbox"
-                  id="rgpd-consent"
-                  required
-                  defaultChecked
-                  className="mt-0.5 rounded border-slate-700 bg-slate-900 text-blue-500 focus:ring-blue-500/30 focus:ring-offset-0 cursor-pointer"
-                />
-                <label htmlFor="rgpd-consent" className="cursor-pointer text-[11px] leading-relaxed">
-                  J'accepte les{' '}
-                  <button
-                    type="button"
-                    onClick={() => onOpenLegal('cgu')}
-                    className="text-blue-400 hover:text-blue-300 underline cursor-pointer"
-                  >
-                    Conditions Générales
-                  </button>{' '}
-                  et la{' '}
-                  <button
-                    type="button"
-                    onClick={() => onOpenLegal('rgpd')}
-                    className="text-blue-400 hover:text-blue-300 underline cursor-pointer"
-                  >
-                    Notice RGPD & Données
-                  </button>{' '}
-                  de Daseis. Mes coordonnées sont exclusivement utilisées pour la délivrance de mes remises et ne sont jamais revendues.
-                </label>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="btn-pressable w-full py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 text-white font-semibold text-sm shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                {isSubmitting ? (
-                  <>
-                    <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                    <span>Envoi en cours via Resend...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Recevoir mes codes et catalogues remisés</span>
-                    <PaperPlaneTilt size={16} weight="bold" />
-                  </>
-                )}
-              </button>
-
-              <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400 text-center">
-                <ShieldCheck size={14} className="text-emerald-400 shrink-0" />
-                <span>
-                  Données protégées conformément au RGPD.{' '}
-                  <button
-                    type="button"
-                    onClick={() => onOpenLegal('rgpd')}
-                    className="text-blue-400 hover:text-blue-300 underline cursor-pointer ml-0.5"
-                  >
-                    Consulter la notice
-                  </button>
-                </span>
-              </div>
+            <div className="flex items-start gap-3 pt-1">
+              <input
+                type="checkbox"
+                id="rgpd-consent"
+                required
+                defaultChecked
+                className="mt-0.5 border-neutral-300 cursor-pointer accent-black"
+              />
+              <label htmlFor="rgpd-consent" className="text-[11px] text-neutral-500 cursor-pointer leading-relaxed">
+                J'accepte les{' '}
+                <button
+                  type="button"
+                  onClick={() => onOpenLegal('cgu')}
+                  className="underline underline-offset-2 hover:text-black transition-colors cursor-pointer"
+                >
+                  Conditions Générales
+                </button>{' '}
+                et la{' '}
+                <button
+                  type="button"
+                  onClick={() => onOpenLegal('rgpd')}
+                  className="underline underline-offset-2 hover:text-black transition-colors cursor-pointer"
+                >
+                  Notice RGPD
+                </button>
+                . Mes coordonnées sont utilisées uniquement pour la délivrance de mes codes de réduction.
+              </label>
             </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn-pressable w-full py-4 bg-black text-white text-sm font-medium hover:bg-neutral-800 disabled:bg-neutral-400 transition-colors cursor-pointer flex items-center justify-center gap-2"
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Envoi en cours…</span>
+                </>
+              ) : (
+                'Envoyer ma demande'
+              )}
+            </button>
           </form>
         )}
       </div>
@@ -1271,79 +924,53 @@ function ContactForm({
   );
 }
 
-// 9. Footer (Clean, responsive with support email)
+// ─── 10. Footer ────────────────────────────────────────────────────────────────
 function Footer({ onOpenLegal }: { onOpenLegal: (tab: LegalTab) => void }) {
   return (
-    <footer className="bg-[#050811] border-t border-white/[0.08] py-12 text-slate-400 text-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-white/[0.06]">
-          <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-3">
-              <img
-                src="/logo-wordmark.png"
-                alt="DASEIS"
-                className="h-6 sm:h-7 w-auto object-contain"
-              />
-            </div>
-            <p className="text-slate-400 max-w-sm leading-relaxed">
-              La plateforme française d'achats groupés pour instituts de beauté, artisans indépendants et ateliers de bien-être.
+    <footer className="border-t border-neutral-200 py-10 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 mb-8 border-b border-neutral-100">
+          <div className="md:col-span-1">
+            <img
+              src="/logo-wordmark-black.png"
+              alt="DASEIS"
+              className="h-6 w-auto object-contain mb-3"
+            />
+            <p className="text-xs text-neutral-500 leading-relaxed max-w-xs">
+              Réseau d'achats professionnels pour instituts de beauté, artisans et ateliers indépendants.
             </p>
           </div>
-
           <div>
-            <h4 className="text-white font-semibold mb-3">Navigation</h4>
-            <ul className="space-y-2">
-              <li><a href="#comment-ca-marche" className="hover:text-white transition-colors">Comment ça marche</a></li>
-              <li><a href="#simulateur" className="hover:text-white transition-colors">Simulateur d'économies</a></li>
-              <li><a href="#solutions" className="hover:text-white transition-colors">Instituts & Artisans</a></li>
-              <li><a href="#solutions" className="hover:text-white transition-colors">Fournisseurs agréés</a></li>
-              <li><a href="#faq" className="hover:text-white transition-colors">Questions fréquentes</a></li>
+            <h4 className="text-xs font-medium text-black mb-3">Navigation</h4>
+            <ul className="space-y-2 text-xs text-neutral-500">
+              <li><a href="#comment-ca-marche" className="hover:text-black transition-colors">Comment ça marche</a></li>
+              <li><a href="#solutions" className="hover:text-black transition-colors">Instituts & Artisans</a></li>
+              <li><a href="#transparence" className="hover:text-black transition-colors">Notre modèle</a></li>
+              <li><a href="#faq" className="hover:text-black transition-colors">FAQ</a></li>
             </ul>
           </div>
-
           <div>
-            <h4 className="text-white font-semibold mb-3">Informations & Contact</h4>
-            <ul className="space-y-2">
-              <li><span className="text-slate-300 font-medium">Service Support Instituts & Artisans</span></li>
+            <h4 className="text-xs font-medium text-black mb-3">Contact</h4>
+            <ul className="space-y-2 text-xs text-neutral-500">
               <li>
                 <a
                   href="mailto:daseis.foundation@gmail.com"
-                  className="text-blue-400 hover:text-blue-300 font-mono transition-colors"
+                  className="hover:text-black transition-colors font-mono"
                 >
                   daseis.foundation@gmail.com
                 </a>
               </li>
-              <li className="pt-2 text-slate-400">France métropolitaine & Dom-Tom</li>
+              <li>France métropolitaine & Dom-Tom</li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-400 text-[11px]">
-          <div>
-            © {new Date().getFullYear()} Daseis Technologies. Tous droits réservés. Service gratuit sans engagement.
-          </div>
-          <div className="flex flex-wrap gap-4">
-            <button
-              type="button"
-              onClick={() => onOpenLegal('mentions')}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              Mentions légales
-            </button>
-            <button
-              type="button"
-              onClick={() => onOpenLegal('rgpd')}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              Politique RGPD
-            </button>
-            <button
-              type="button"
-              onClick={() => onOpenLegal('cgu')}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              Conditions Générales (CGU)
-            </button>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-[11px] text-neutral-400">
+          <span>© {new Date().getFullYear()} Daseis. Service d'apporteur d'affaires — rémunéré par commission fournisseur.</span>
+          <div className="flex gap-5">
+            <button onClick={() => onOpenLegal('mentions')} className="hover:text-black transition-colors cursor-pointer">Mentions légales</button>
+            <button onClick={() => onOpenLegal('rgpd')} className="hover:text-black transition-colors cursor-pointer">RGPD</button>
+            <button onClick={() => onOpenLegal('cgu')} className="hover:text-black transition-colors cursor-pointer">CGU</button>
           </div>
         </div>
       </div>
@@ -1351,9 +978,8 @@ function Footer({ onOpenLegal }: { onOpenLegal: (tab: LegalTab) => void }) {
   );
 }
 
-// Main Application Component
+// ─── App Root ──────────────────────────────────────────────────────────────────
 export default function App() {
-  const [selectedActivity, setSelectedActivity] = useState<string>('');
   const [legalModalOpen, setLegalModalOpen] = useState(false);
   const [legalInitialTab, setLegalInitialTab] = useState<LegalTab>('mentions');
 
@@ -1362,13 +988,18 @@ export default function App() {
     setLegalModalOpen(true);
   };
 
+  const handleOpenContact = () => {
+    const el = document.getElementById('contact');
+    el?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash;
       if (hash === '#mentions-legales' || hash === '#mentions') {
         setLegalInitialTab('mentions');
         setLegalModalOpen(true);
-      } else if (hash === '#rgpd' || hash === '#confidentialite' || hash === '#donnees') {
+      } else if (hash === '#rgpd' || hash === '#confidentialite') {
         setLegalInitialTab('rgpd');
         setLegalModalOpen(true);
       } else if (hash === '#cgu' || hash === '#conditions') {
@@ -1376,34 +1007,23 @@ export default function App() {
         setLegalModalOpen(true);
       }
     };
-
     handleHash();
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
-  const handleOpenContact = (role?: 'institut' | 'fournisseur') => {
-    const el = document.getElementById('contact');
-    el?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleSelectFromSimulator = (activityTitle: string, spend: number) => {
-    setSelectedActivity(`${activityTitle} (Budget : ${spend}€/mois)`);
-    const el = document.getElementById('contact');
-    el?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <div className="min-h-screen bg-[#080d1a] text-slate-100 flex flex-col font-sans selection:bg-blue-500/30 selection:text-white antialiased">
+    <div className="min-h-screen bg-white text-black flex flex-col antialiased">
       <Header onOpenContact={handleOpenContact} />
       <main className="flex-1">
-        <HeroSection onSelectActivity={handleSelectFromSimulator} />
-        <CredibilityStrip />
+        <HeroSection onOpenContact={handleOpenContact} />
+        <ReassuranceStrip />
         <HowItWorks />
         <AudienceSolutions onOpenContact={handleOpenContact} />
         <TransparencySection />
+        <SavingsSimulator />
         <FAQ />
-        <ContactForm prefilledActivity={selectedActivity} onOpenLegal={handleOpenLegal} />
+        <ContactForm onOpenLegal={handleOpenLegal} />
       </main>
       <Footer onOpenLegal={handleOpenLegal} />
       <LegalModal
